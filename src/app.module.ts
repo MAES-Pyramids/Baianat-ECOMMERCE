@@ -1,6 +1,11 @@
 import Configs from '@shared/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './app/modules/database/database.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
+import { UserModule } from './app/modules/user/user.module';
 
 @Module({
   imports: [
@@ -10,8 +15,19 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       ignoreEnvFile: false,
       expandVariables: true,
-      envFilePath: [`etc/secrets/.env.${process.env.NODE_ENV}`],
+      envFilePath: [`etc/secrets/.env.${process.env.NODE_ENV}`, 'prisma/.env'],
     }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      debug: true,
+      driver: ApolloDriver,
+      typePaths: ['./**/*.graphql'],
+      definitions: {
+        path: join(process.cwd(), 'src/app/shared/types/graphql.schema.ts'),
+        outputAs: 'class',
+      },
+    }),
+    DatabaseModule,
+    UserModule,
   ],
   providers: [],
   controllers: [],

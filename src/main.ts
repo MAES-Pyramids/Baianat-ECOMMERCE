@@ -8,7 +8,6 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  app.setGlobalPrefix(configService.get<string>('app.prefix'));
   app.enableCors({ origin: '*', methods: 'GET,HEAD,PUT,PATCH,POST,DELETE' });
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
