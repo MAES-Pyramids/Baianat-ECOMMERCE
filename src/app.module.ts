@@ -1,12 +1,13 @@
+import { join } from 'path';
 import Configs from '@shared/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './app/modules/database/database.module';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
-import { UsersModule } from './app/modules/users/users.module';
+import { UserModule } from './app/modules/user/user.module';
 import { AuthModule } from './app/modules/auth/auth.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { DatabaseModule } from './app/modules/database/database.module';
+import { OtpModule } from './app/modules/otp/otp.module';
 
 @Module({
   imports: [
@@ -28,8 +29,9 @@ import { AuthModule } from './app/modules/auth/auth.module';
       },
     }),
     DatabaseModule,
-    UsersModule,
+    UserModule,
     AuthModule,
+    OtpModule,
   ],
   providers: [],
   controllers: [],

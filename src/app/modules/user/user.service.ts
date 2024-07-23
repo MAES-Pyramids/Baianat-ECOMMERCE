@@ -9,7 +9,7 @@ import {
 import { Prisma } from '@prisma/client';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(private readonly prismaService: DatabaseService) {}
 
   async findAll(): Promise<User[]> {
