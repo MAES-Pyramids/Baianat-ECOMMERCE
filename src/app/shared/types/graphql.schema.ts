@@ -9,8 +9,8 @@
 /* eslint-disable */
 
 export class SignupInput {
-    first_name: string;
-    last_name?: Nullable<string>;
+    firstName: string;
+    lastName?: Nullable<string>;
     email: string;
     password: string;
 }
@@ -21,16 +21,16 @@ export class LoginInput {
 }
 
 export class CreateUserInput {
-    first_name: string;
-    last_name?: Nullable<string>;
+    firstName: string;
+    lastName?: Nullable<string>;
     email: string;
     password: string;
 }
 
 export class UpdateUserInput {
     role?: Nullable<string>;
-    first_name?: Nullable<string>;
-    last_name?: Nullable<string>;
+    firstName?: Nullable<string>;
+    lastName?: Nullable<string>;
     email?: Nullable<string>;
     password?: Nullable<string>;
     isSuspended?: Nullable<boolean>;
@@ -52,7 +52,7 @@ export abstract class IQuery {
 export abstract class IMutation {
     abstract login(loginInput: LoginInput): AuthPayload | Promise<AuthPayload>;
 
-    abstract signup(signupInput: SignupInput): AuthPayload | Promise<AuthPayload>;
+    abstract signup(signupInput: SignupInput): User | Promise<User>;
 
     abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
 
@@ -64,8 +64,8 @@ export abstract class IMutation {
 export class User {
     id: number;
     role: string;
-    first_name: string;
-    last_name?: Nullable<string>;
+    firstName: string;
+    lastName?: Nullable<string>;
     email: string;
     password: string;
     isVerified: boolean;

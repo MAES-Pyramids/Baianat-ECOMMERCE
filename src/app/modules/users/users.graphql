@@ -3,8 +3,8 @@ scalar DateTime
 type User {
   id: Int!
   role: String!
-  first_name: String!
-  last_name: String
+  firstName: String!
+  lastName: String
   email: String!
   password: String!
   isVerified: Boolean!
@@ -12,16 +12,16 @@ type User {
 }
 
 input CreateUserInput {
-  first_name: String!
-  last_name: String
+  firstName: String!
+  lastName: String
   email: String!
   password: String!
 }
 
 input UpdateUserInput {
   role: String
-  first_name: String
-  last_name: String
+  firstName: String
+  lastName: String
   email: String
   password: String
   isSuspended: Boolean
