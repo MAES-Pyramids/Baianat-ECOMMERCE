@@ -1,13 +1,17 @@
 import * as bcrypt from 'bcrypt';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { OtpTypes } from '@shared/enums/otps.enum';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { DatabaseService } from '../database/database.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 const INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Injectable()
 export class OtpService {
-  constructor(private readonly prismaService: DatabaseService) {}
+  constructor(
+    private eventEmitter: EventEmitter2,
+    private readonly prismaService: DatabaseService,
+  ) {}
 
   async createOtp(userId: number, otpType: OtpTypes): Promise<string> {
     try {
@@ -49,5 +53,18 @@ export class OtpService {
     } catch (error) {
       throw new HttpException('Error verifying OTP', INTERNAL_SERVER_ERROR);
     }
+  }
+
+  async createAndSendOtp(
+    userId: number,
+    email: string,
+    otpType: OtpTypes,
+  ): Promise<any> {
+    const otp = await this.createOtp(userId, otpType);
+    return await this.eventEmitter.emitAsync('otp.sent', {
+      email,
+      otp,
+      mailType: otpType,
+    });
   }
 }

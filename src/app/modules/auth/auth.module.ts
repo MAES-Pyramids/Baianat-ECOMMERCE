@@ -6,6 +6,7 @@ import { UserModule } from '../user/user.module';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { JwtStrategy } from '../../shared/strategies/jwt.strategy';
 import { LocalStrategy } from '../../shared/strategies/local.strategy';
+import { OtpModule } from '../otp/otp.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { LocalStrategy } from '../../shared/strategies/local.strategy';
     }),
     PassportModule,
     UserModule,
+    OtpModule,
   ],
   providers: [AuthResolver, AuthService, LocalStrategy, JwtStrategy],
 })

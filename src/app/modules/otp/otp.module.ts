@@ -4,5 +4,6 @@ import { OtpResolver } from './otp.resolver';
 
 @Module({
   providers: [OtpResolver, OtpService],
+  exports: [OtpService],
 })
 export class OtpModule {}

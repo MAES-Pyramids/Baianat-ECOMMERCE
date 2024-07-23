@@ -3,13 +3,11 @@ import { SendOtpInputDto } from './dtos/send-otp.dto';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { DatabaseService } from '../database/database.service';
 import { SendOtpResponse } from '../../shared/types/graphql.schema';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Resolver()
 export class OtpResolver {
   constructor(
     private otpService: OtpService,
-    private eventEmitter: EventEmitter2,
     private readonly prismaService: DatabaseService,
   ) {}
 
@@ -25,12 +23,11 @@ export class OtpResolver {
     });
     if (!user || !user.id) return { success: false, message: 'User not found' };
 
-    const otp = await this.otpService.createOtp(user.id, otpType);
-    const valid = await this.eventEmitter.emitAsync('otp.sent', {
+    const valid = await this.otpService.createAndSendOtp(
+      user.id,
       email,
-      otp,
-      mailType: otpType,
-    });
+      otpType,
+    );
 
     if (valid) return { success: true, message: 'OTP sent' };
     else return { success: false, message: 'Failed to send OTP' };
