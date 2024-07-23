@@ -1,6 +1,6 @@
 input SendOtpInput {
-  type: String!
-  email: String
+  otpType: String!
+  email: String!
 }
 
 type SendOtpResponse {
@@ -9,5 +9,5 @@ type SendOtpResponse {
 }
 
 type Mutation {
-  sendOtp(input: SendOtpInput!): SendOtpResponse!
+  sendOtp(sendOtpInput: SendOtpInput!): SendOtpResponse!
 }

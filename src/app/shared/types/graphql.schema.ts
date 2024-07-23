@@ -21,8 +21,8 @@ export class LoginInput {
 }
 
 export class SendOtpInput {
-    type: string;
-    email?: Nullable<string>;
+    otpType: string;
+    email: string;
 }
 
 export class CreateUserInput {
@@ -59,7 +59,7 @@ export abstract class IMutation {
 
     abstract signup(signupInput: SignupInput): User | Promise<User>;
 
-    abstract sendOtp(input: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
+    abstract sendOtp(sendOtpInput: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
 
     abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
 
