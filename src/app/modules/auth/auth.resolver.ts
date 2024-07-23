@@ -5,7 +5,6 @@ import { SignupInputDto } from './dtos/signup-input.dto';
 import { AuthPayload } from '../../shared/types/graphql.schema';
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { GraphQLAuthGuard } from '../../shared/guards/graphql-authen.guard';
-import { AdminGuard } from '../../shared/guards/graphql-author.guard';
 
 @Resolver()
 export class AuthResolver {
