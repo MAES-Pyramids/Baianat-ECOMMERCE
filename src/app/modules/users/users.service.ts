@@ -6,17 +6,18 @@ import {
   CreateUserInput,
   UpdateUserInput,
 } from '../../shared/types/graphql.schema';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(private readonly prismaService: DatabaseService) {}
 
   async findAll(): Promise<User[]> {
     return this.prismaService.user.findMany();
   }
 
-  findOne(id: number): Promise<User> {
-    return this.prismaService.user.findUniqueOrThrow({ where: { id } });
+  async findOne(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    return this.prismaService.user.findUniqueOrThrow({ where });
   }
 
   update(id: number, updateUserInput: UpdateUserInput): Promise<User> {
