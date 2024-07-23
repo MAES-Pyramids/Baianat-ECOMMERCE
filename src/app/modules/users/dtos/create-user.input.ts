@@ -2,11 +2,11 @@ import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateUserInputDto {
   @IsString()
-  first_name: string;
+  firstName: string;
 
   @IsOptional()
   @IsString()
-  last_name?: string | null;
+  lastName?: string | null;
 
   @IsEmail()
   email: string;
