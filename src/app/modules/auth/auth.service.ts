@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { promisify } from 'util';
 import { JwtService } from '@nestjs/jwt';
 import { scrypt as _scrypt } from 'crypto';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 import { SignupInputDto } from './dtos/signup-input.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { AuthPayload, User } from '../../shared/types/graphql.schema';
@@ -13,12 +13,12 @@ const scrypt = promisify(_scrypt);
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private userService: UserService,
     private jwtService: JwtService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne({ email });
+    const user = await this.userService.findOne({ email });
 
     const [storedHash, salt] = user.password.split('.');
     const hash = (await scrypt(password, salt, 32)) as Buffer;
@@ -33,7 +33,7 @@ export class AuthService {
 
   async signup(signupInput: SignupInputDto): Promise<User> {
     // Note: Email uniqueness is managed by the Prisma exception filter. Checking for email existence manually is unnecessary and avoids redundant database queries.
-    return this.usersService.create(signupInput);
+    return this.userService.create(signupInput);
   }
 
   async login(user: User): Promise<AuthPayload> {

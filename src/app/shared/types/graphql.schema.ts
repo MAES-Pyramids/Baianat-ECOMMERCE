@@ -20,6 +20,11 @@ export class LoginInput {
     password: string;
 }
 
+export class SendOtpInput {
+    type: string;
+    email?: Nullable<string>;
+}
+
 export class CreateUserInput {
     firstName: string;
     lastName?: Nullable<string>;
@@ -54,11 +59,18 @@ export abstract class IMutation {
 
     abstract signup(signupInput: SignupInput): User | Promise<User>;
 
+    abstract sendOtp(input: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
+
     abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
 
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
     abstract updateUser(id: number, updateUserInput: UpdateUserInput): User | Promise<User>;
+}
+
+export class SendOtpResponse {
+    success: boolean;
+    message?: Nullable<string>;
 }
 
 export class User {
