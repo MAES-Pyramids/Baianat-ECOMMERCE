@@ -1,15 +1,29 @@
+scalar DateTime
+
 type User {
-  # Example field (placeholder)
-  exampleField: Int
+  id: Int!
+  role: String!
+  first_name: String!
+  last_name: String
+  email: String!
+  isVerified: Boolean!
+  isSuspended: Boolean!
 }
 
 input CreateUserInput {
-  # Example field (placeholder)
-  exampleField: Int
+  first_name: String!
+  last_name: String
+  email: String!
+  password: String!
 }
 
 input UpdateUserInput {
-  id: Int!
+  role: String
+  first_name: String
+  last_name: String
+  email: String
+  password: String
+  isSuspended: Boolean
 }
 
 type Query {
@@ -18,7 +32,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(id: Int!, updateUserInput: UpdateUserInput!): User!
 }

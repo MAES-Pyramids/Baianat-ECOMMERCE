@@ -9,15 +9,29 @@
 /* eslint-disable */
 
 export class CreateUserInput {
-    exampleField?: Nullable<number>;
+    first_name: string;
+    last_name?: Nullable<string>;
+    email: string;
+    password: string;
 }
 
 export class UpdateUserInput {
-    id: number;
+    role?: Nullable<string>;
+    first_name?: Nullable<string>;
+    last_name?: Nullable<string>;
+    email?: Nullable<string>;
+    password?: Nullable<string>;
+    isSuspended?: Nullable<boolean>;
 }
 
 export class User {
-    exampleField?: Nullable<number>;
+    id: number;
+    role: string;
+    first_name: string;
+    last_name?: Nullable<string>;
+    email: string;
+    isVerified: boolean;
+    isSuspended: boolean;
 }
 
 export abstract class IQuery {
@@ -27,11 +41,12 @@ export abstract class IQuery {
 }
 
 export abstract class IMutation {
+    abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
+
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
-    abstract updateUser(updateUserInput: UpdateUserInput): User | Promise<User>;
-
-    abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
+    abstract updateUser(id: number, updateUserInput: UpdateUserInput): User | Promise<User>;
 }
 
+export type DateTime = any;
 type Nullable<T> = T | null;
