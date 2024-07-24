@@ -38,14 +38,17 @@ export class UserService {
     return this.prismaService.user.delete({ where: { id } });
   }
 
-  async verifyEmail(id: number, otp: string): Promise<User> {
+  async verifyEmail(email: string, otp: string): Promise<User> {
+    const user = await this.findOne({ email });
+    if (!user) throw new HttpException('email not found', HttpStatus.NOT_FOUND);
+
     const valid = await this.otpService.verifyOtp(
-      id,
+      user.id,
       otp,
       OtpTypes.VERIFY_ACCOUNT,
     );
 
     if (!valid) throw new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST);
-    else return await this.update(id, { isVerified: true });
+    else return await this.update(user.id, { isVerified: true });
   }
 }

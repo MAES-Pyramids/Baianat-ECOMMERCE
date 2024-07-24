@@ -2,19 +2,27 @@ import * as _ from 'lodash';
 import { promisify } from 'util';
 import { JwtService } from '@nestjs/jwt';
 import { scrypt as _scrypt } from 'crypto';
+import { OtpService } from '../otp/otp.service';
 import { UserService } from '../user/user.service';
 import { SignupInputDto } from './dtos/signup-input.dto';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { AuthPayload, User } from '../../shared/types/graphql.schema';
 import { createAuthPayload } from '../../shared/utils/auth-payload.util';
+import { OtpTypes } from '../../shared/enums/otps.enum';
 
 const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private otpService: OtpService,
     private jwtService: JwtService,
+    private userService: UserService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -47,5 +55,21 @@ export class AuthService {
     });
 
     return { accessToken, user };
+  }
+
+  async generateResetPassJWT(email: string, otp: string): Promise<string> {
+    const user = await this.userService.findOne({ email });
+    if (!user) throw new HttpException('email not found', HttpStatus.NOT_FOUND);
+
+    const valid = await this.otpService.verifyOtp(
+      user.id,
+      otp,
+      OtpTypes.RESET_PASSWORD,
+    );
+    if (!valid) throw new BadRequestException('Invalid OTP');
+
+    const secret = process.env.JWT_PASS_SECRET;
+    const options = { expiresIn: process.env.JWT_PASS_RESET_IN };
+    return this.jwtService.sign({ id: user.id }, { secret, ...options });
   }
 }

@@ -4,9 +4,15 @@ import { OtpService } from '../otp/otp.service';
 import { LoginInputDto } from './dtos/login-input.dto';
 import { OtpTypes } from '../../shared/enums/otps.enum';
 import { SignupInputDto } from './dtos/signup-input.dto';
+
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
-import { AuthPayload, User } from '../../shared/types/graphql.schema';
+import {
+  AuthPayload,
+  PassResetPayload,
+  User,
+} from '../../shared/types/graphql.schema';
 import { GraphQLAuthGuard } from '../../shared/guards/graphql-authen.guard';
+import { PassResetInputDto } from './dtos/reset-pass.input';
 
 @Resolver()
 export class AuthResolver {
@@ -37,5 +43,13 @@ export class AuthResolver {
     @Context() context,
   ): Promise<AuthPayload> {
     return this.authService.login(context.user);
+  }
+
+  @Mutation(() => PassResetPayload)
+  async generateResetPassJWT(
+    @Args('passResetInput') { email, otp }: PassResetInputDto,
+  ): Promise<PassResetPayload> {
+    const passToken = await this.authService.generateResetPassJWT(email, otp);
+    return { success: true, passToken };
   }
 }

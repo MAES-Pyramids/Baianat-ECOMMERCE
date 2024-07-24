@@ -20,6 +20,11 @@ export class LoginInput {
     password: string;
 }
 
+export class PassResetInputDto {
+    email: string;
+    otp: string;
+}
+
 export class SendOtpInput {
     otpType: string;
     email: string;
@@ -51,6 +56,11 @@ export class AuthPayload {
     accessToken: string;
 }
 
+export class PassResetPayload {
+    success: boolean;
+    passToken?: Nullable<string>;
+}
+
 export abstract class IQuery {
     abstract me(): Nullable<User> | Promise<Nullable<User>>;
 
@@ -63,6 +73,8 @@ export abstract class IMutation {
     abstract login(loginInput: LoginInput): AuthPayload | Promise<AuthPayload>;
 
     abstract signup(signupInput: SignupInput): User | Promise<User>;
+
+    abstract generateResetPassJWT(passResetInput: PassResetInputDto): PassResetPayload | Promise<PassResetPayload>;
 
     abstract sendOtp(sendOtpInput: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
 

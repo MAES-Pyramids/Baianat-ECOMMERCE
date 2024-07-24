@@ -57,9 +57,6 @@ export class UserResolver {
   async verifyEmail(
     @Args('verifyEmailInput') { email, otp }: VerifyEmailInputDto,
   ): Promise<User> {
-    const { id } = await this.userService.findOne({ email });
-    if (!id) throw new HttpException('not found', HttpStatus.BAD_REQUEST);
-
-    return this.userService.verifyEmail(id, otp);
+    return this.userService.verifyEmail(email, otp);
   }
 }
