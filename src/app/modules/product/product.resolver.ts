@@ -3,8 +3,13 @@ import { ProductService } from './product.service';
 import { UpdateProductInputDto } from './dto/update-product.input';
 import { CreateProductInputDto } from './dto/create-product.input';
 import { Product } from '../../shared/types/graphql.schema';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
+import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
+import { Roles } from '../../shared/decorators/roles.decorator';
 
 @Resolver(() => Product)
+@UseGuards(JwtAuthenticationGuard)
 export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
@@ -19,6 +24,8 @@ export class ProductResolver {
   }
 
   @Mutation(() => Product)
+  @UseGuards(JwtAuthorizationGuard)
+  @Roles('admin')
   createProduct(
     @Args('createProductInput') createProductInput: CreateProductInputDto,
   ) {
@@ -26,6 +33,8 @@ export class ProductResolver {
   }
 
   @Mutation(() => Product)
+  @UseGuards(JwtAuthorizationGuard)
+  @Roles('admin')
   updateProduct(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateProductInput') updateProductInput: UpdateProductInputDto,
@@ -34,6 +43,8 @@ export class ProductResolver {
   }
 
   @Mutation(() => Product)
+  @UseGuards(JwtAuthorizationGuard)
+  @Roles('admin')
   removeProduct(@Args('id', { type: () => Int }) id: number) {
     return this.productService.remove(id);
   }
