@@ -1,0 +1,42 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Otp {
+  id         Int       @id @default(autoincrement())
+  otp        String
+  userId     Int       @unique
+  otpType    String
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime
+
+  user       User      @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, otpType])
+  @@map("otp")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  role         String    @default("user")
+
+  firstName    String
+  lastName     String?   
+  email        String    @unique
+  password     String   
+  isVerified   Boolean   @default(false)
+  isSuspended  Boolean   @default(false)
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  otp          Otp?      @relation
+
+  @@map("users")
+}
