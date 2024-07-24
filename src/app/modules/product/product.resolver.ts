@@ -1,12 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
+import { Product } from '../../shared/types/graphql.schema';
+import { Roles } from '../../shared/decorators/roles.decorator';
 import { UpdateProductInputDto } from './dto/update-product.input';
 import { CreateProductInputDto } from './dto/create-product.input';
-import { Product } from '../../shared/types/graphql.schema';
-import { UseGuards } from '@nestjs/common';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
 import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
-import { Roles } from '../../shared/decorators/roles.decorator';
 
 @Resolver(() => Product)
 @UseGuards(JwtAuthenticationGuard)
