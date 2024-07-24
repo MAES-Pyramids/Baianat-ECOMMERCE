@@ -50,4 +50,11 @@ export class UserService {
     if (!valid) throw new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST);
     else return await this.update(user.id, { isVerified: true });
   }
+
+  async sendOtp(email: string, otpType: OtpTypes): Promise<void> {
+    const user = await this.findOne({ email });
+    if (!user) throw new HttpException('email not found', HttpStatus.NOT_FOUND);
+
+    await this.otpService.createAndSendOtp(user.id, email, otpType);
+  }
 }

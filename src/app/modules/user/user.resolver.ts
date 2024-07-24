@@ -1,6 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from '../../shared/types/graphql.schema';
+import { SendOtpResponse, User } from '../../shared/types/graphql.schema';
 import { UpdateUserInputDto } from './dtos/update-user.input';
 import { CreateUserInputDto } from './dtos/create-user.input';
 import { Roles } from '../../shared/decorators/roles.decorator';
@@ -8,6 +8,7 @@ import { VerifyEmailInputDto } from './dtos/verify-email.input';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
 import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
+import { SendOtpInputDto } from './dtos/send-otp.dto';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -58,5 +59,13 @@ export class UserResolver {
     @Args('verifyEmailInput') { email, otp }: VerifyEmailInputDto,
   ): Promise<User> {
     return this.userService.verifyEmail(email, otp);
+  }
+
+  @Mutation(() => SendOtpResponse)
+  async sendOtp(
+    @Args('sendOtpInput') { email, otpType }: SendOtpInputDto,
+  ): Promise<SendOtpResponse> {
+    await this.userService.sendOtp(email, otpType);
+    return { success: true, message: 'OTP sent' };
   }
 }

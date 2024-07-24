@@ -30,11 +30,6 @@ export class SetPasswordInput {
     password: string;
 }
 
-export class SendOtpInput {
-    otpType: string;
-    email: string;
-}
-
 export class CreateUserInput {
     firstName: string;
     lastName?: Nullable<string>;
@@ -54,6 +49,11 @@ export class UpdateUserInput {
 export class VerifyEmailInput {
     email: string;
     otp: string;
+}
+
+export class SendOtpInput {
+    otpType: string;
+    email: string;
 }
 
 export class AuthPayload {
@@ -88,20 +88,15 @@ export abstract class IMutation {
 
     abstract generateResetPassJWT(passResetInput: PassResetInputDto): PassResetResponse | Promise<PassResetResponse>;
 
-    abstract sendOtp(sendOtpInput: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
-
     abstract updateUser(id: number, updateUserInput: UpdateUserInput): User | Promise<User>;
 
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
     abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
 
-    abstract verifyEmail(verifyEmailInput: VerifyEmailInput): User | Promise<User>;
-}
+    abstract sendOtp(sendOtpInput: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
 
-export class SendOtpResponse {
-    success: boolean;
-    message?: Nullable<string>;
+    abstract verifyEmail(verifyEmailInput: VerifyEmailInput): User | Promise<User>;
 }
 
 export class User {
@@ -113,6 +108,11 @@ export class User {
     password: string;
     isVerified: boolean;
     isSuspended: boolean;
+}
+
+export class SendOtpResponse {
+    success: boolean;
+    message?: Nullable<string>;
 }
 
 export type DateTime = any;
