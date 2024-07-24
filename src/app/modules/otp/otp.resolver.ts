@@ -23,13 +23,7 @@ export class OtpResolver {
     });
     if (!user || !user.id) return { success: false, message: 'User not found' };
 
-    const valid = await this.otpService.createAndSendOtp(
-      user.id,
-      email,
-      otpType,
-    );
-
-    if (valid) return { success: true, message: 'OTP sent' };
-    else return { success: false, message: 'Failed to send OTP' };
+    await this.otpService.createAndSendOtp(user.id, email, otpType);
+    return { success: true, message: 'OTP sent' };
   }
 }

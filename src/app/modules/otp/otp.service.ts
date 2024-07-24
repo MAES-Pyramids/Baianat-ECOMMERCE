@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcrypt';
 import { OtpTypes } from '@shared/enums/otps.enum';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { DatabaseService } from '../database/database.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 const INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -59,9 +59,10 @@ export class OtpService {
     userId: number,
     email: string,
     otpType: OtpTypes,
-  ): Promise<any> {
+  ): Promise<void> {
     const otp = await this.createOtp(userId, otpType);
-    return await this.eventEmitter.emitAsync('otp.sent', {
+
+    this.eventEmitter.emit('otp.sent', {
       email,
       otp,
       mailType: otpType,

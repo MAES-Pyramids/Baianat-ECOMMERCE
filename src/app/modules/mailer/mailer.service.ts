@@ -1,7 +1,7 @@
 import * as nodemailer from 'nodemailer';
-import { mailTypes } from '../../shared/enums/mails.enum';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
+import { mailTypes } from '../../shared/enums/mails.enum';
 
 @Injectable()
 export class MailerService {
@@ -52,12 +52,9 @@ export class MailerService {
     };
 
     try {
-      return await this.transporter.sendMail(mailOptions);
+      await this.transporter.sendMail(mailOptions);
     } catch (error) {
-      throw new HttpException(
-        `Error sending email: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new Error(`Error sending email: ${error.message}`);
     }
   }
 }

@@ -7,7 +7,6 @@ import { SignupInputDto } from './dtos/signup-input.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { AuthPayload, User } from '../../shared/types/graphql.schema';
 import { createAuthPayload } from '../../shared/utils/auth-payload.util';
-import { OtpService } from '../otp/otp.service';
 
 const scrypt = promisify(_scrypt);
 
@@ -16,7 +15,6 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    private otpService: OtpService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
