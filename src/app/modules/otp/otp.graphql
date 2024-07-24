@@ -1,0 +1,13 @@
+input SendOtpInput {
+  otpType: String!
+  email: String!
+}
+
+type SendOtpResponse {
+  success: Boolean!
+  message: String
+}
+
+type Mutation {
+  sendOtp(sendOtpInput: SendOtpInput!): SendOtpResponse!
+}

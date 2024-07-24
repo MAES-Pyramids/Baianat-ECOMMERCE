@@ -1,4 +1,4 @@
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 import { User } from '../../shared/types/graphql.schema';
 import { UpdateUserInputDto } from './dtos/update-user.input';
 import { CreateUserInputDto } from './dtos/create-user.input';
@@ -10,26 +10,26 @@ import { Roles } from '../../shared/decorators/roles.decorator';
 
 @Resolver(() => User)
 @UseGuards(JwtAuthenticationGuard)
-export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+export class UserResolver {
+  constructor(private readonly userService: UserService) {}
 
   @Query(() => [User])
   @UseGuards(JwtAuthorizationGuard)
   @Roles('admin')
   async users(): Promise<User[]> {
-    return this.usersService.findAll();
+    return this.userService.findAll();
   }
 
   @Query(() => User)
   async user(@Args('id', { type: () => Int }) id: number): Promise<User> {
-    return this.usersService.findOne({ id });
+    return this.userService.findOne({ id });
   }
 
   @Mutation(() => User)
   async createUser(
     @Args('createUserInput') createUserInput: CreateUserInputDto,
   ): Promise<User> {
-    return this.usersService.create(createUserInput);
+    return this.userService.create(createUserInput);
   }
 
   @Mutation(() => User)
@@ -37,11 +37,11 @@ export class UsersResolver {
     @Args('id', { type: () => Int }) id: number,
     @Args('updateUserInput') updateUserInput: UpdateUserInputDto,
   ): Promise<User> {
-    return this.usersService.update(id, updateUserInput);
+    return this.userService.update(id, updateUserInput);
   }
 
   @Mutation(() => User)
   async removeUser(@Args('id', { type: () => Int }) id: number): Promise<User> {
-    return this.usersService.remove(id);
+    return this.userService.remove(id);
   }
 }

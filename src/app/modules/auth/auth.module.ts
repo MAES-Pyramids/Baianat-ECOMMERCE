@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { PassportModule } from '@nestjs/passport';
-import { UsersModule } from '../users/users.module';
+import { UserModule } from '../user/user.module';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
-import { JwtStrategy } from './passport-strategies/jwt.strategy';
-import { LocalStrategy } from './passport-strategies/local.strategy';
+import { JwtStrategy } from '../../shared/strategies/jwt.strategy';
+import { LocalStrategy } from '../../shared/strategies/local.strategy';
+import { OtpModule } from '../otp/otp.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { LocalStrategy } from './passport-strategies/local.strategy';
       },
     }),
     PassportModule,
-    UsersModule,
+    UserModule,
+    OtpModule,
   ],
   providers: [AuthResolver, AuthService, LocalStrategy, JwtStrategy],
 })
