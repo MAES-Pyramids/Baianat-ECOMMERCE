@@ -8,11 +8,13 @@ import { SignupInputDto } from './dtos/signup-input.dto';
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import {
   AuthPayload,
-  PassResetPayload,
+  PassResetResponse,
+  SetPasswordResponse,
   User,
 } from '../../shared/types/graphql.schema';
 import { GraphQLAuthGuard } from '../../shared/guards/graphql-authen.guard';
 import { PassResetInputDto } from './dtos/reset-pass.input';
+import { SetPasswordInputDto } from './dtos/set-pass.input';
 
 @Resolver()
 export class AuthResolver {
@@ -45,11 +47,23 @@ export class AuthResolver {
     return this.authService.login(context.user);
   }
 
-  @Mutation(() => PassResetPayload)
+  @Mutation(() => PassResetResponse)
   async generateResetPassJWT(
     @Args('passResetInput') { email, otp }: PassResetInputDto,
-  ): Promise<PassResetPayload> {
-    const passToken = await this.authService.generateResetPassJWT(email, otp);
-    return { success: true, passToken };
+  ): Promise<PassResetResponse> {
+    const passwordResetToken = await this.authService.generateResetPassJWT(
+      email,
+      otp,
+    );
+    return { success: true, passwordResetToken };
+  }
+
+  @Mutation(() => SetPasswordResponse)
+  async setPassword(
+    @Args('setPasswordInput')
+    { passwordResetToken, password }: SetPasswordInputDto,
+  ): Promise<SetPasswordResponse> {
+    await this.authService.setPassword(passwordResetToken, password);
+    return { success: true, message: 'Password set successfully' };
   }
 }

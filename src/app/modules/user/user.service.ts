@@ -1,10 +1,9 @@
 import { Prisma } from '@prisma/client';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { User } from '../../shared/types/graphql.schema';
-import { CreateUserInputDto } from './dtos/create-user.input';
-import { DatabaseService } from '../database/database.service';
 import { OtpService } from '../otp/otp.service';
 import { OtpTypes } from '../../shared/enums/otps.enum';
+import { User } from '../../shared/types/graphql.schema';
+import { DatabaseService } from '../database/database.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
@@ -21,16 +20,16 @@ export class UserService {
     return this.prismaService.user.findUnique({ where });
   }
 
-  update(id: number, updateUserInput: Partial<User>): Promise<User> {
-    return this.prismaService.user.update({
-      where: { id },
-      data: updateUserInput,
+  create(createUserInput: Prisma.UserCreateInput): Promise<User> {
+    return this.prismaService.user.create({
+      data: createUserInput,
     });
   }
 
-  create(createUserInput: CreateUserInputDto): Promise<User> {
-    return this.prismaService.user.create({
-      data: createUserInput,
+  update(id: number, updateUserInput: Prisma.UserUpdateInput): Promise<User> {
+    return this.prismaService.user.update({
+      where: { id },
+      data: updateUserInput,
     });
   }
 

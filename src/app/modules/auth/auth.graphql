@@ -3,9 +3,14 @@ type AuthPayload {
   accessToken: String!
 }
 
-type PassResetPayload {
+type PassResetResponse {
   success: Boolean!
-  passToken: String
+  passwordResetToken: String
+}
+
+type SetPasswordResponse {
+  success: Boolean!
+  message: String
 }
 
 input SignupInput {
@@ -25,12 +30,18 @@ input PassResetInputDto {
   otp: String!
 }
 
+input SetPasswordInput {
+  passwordResetToken: String!
+  password: String!
+}
+
 type Query {
   me: User
 }
 
 type Mutation {
-  login(loginInput: LoginInput!): AuthPayload!
   signup(signupInput: SignupInput!): User!
-  generateResetPassJWT(passResetInput: PassResetInputDto!): PassResetPayload!
+  login(loginInput: LoginInput!): AuthPayload!
+  setPassword(setPasswordInput: SetPasswordInput!): SetPasswordResponse!
+  generateResetPassJWT(passResetInput: PassResetInputDto!): PassResetResponse!
 }

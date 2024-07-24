@@ -25,6 +25,11 @@ export class PassResetInputDto {
     otp: string;
 }
 
+export class SetPasswordInput {
+    passwordResetToken: string;
+    password: string;
+}
+
 export class SendOtpInput {
     otpType: string;
     email: string;
@@ -56,9 +61,14 @@ export class AuthPayload {
     accessToken: string;
 }
 
-export class PassResetPayload {
+export class PassResetResponse {
     success: boolean;
-    passToken?: Nullable<string>;
+    passwordResetToken?: Nullable<string>;
+}
+
+export class SetPasswordResponse {
+    success: boolean;
+    message?: Nullable<string>;
 }
 
 export abstract class IQuery {
@@ -70,19 +80,21 @@ export abstract class IQuery {
 }
 
 export abstract class IMutation {
-    abstract login(loginInput: LoginInput): AuthPayload | Promise<AuthPayload>;
-
     abstract signup(signupInput: SignupInput): User | Promise<User>;
 
-    abstract generateResetPassJWT(passResetInput: PassResetInputDto): PassResetPayload | Promise<PassResetPayload>;
+    abstract login(loginInput: LoginInput): AuthPayload | Promise<AuthPayload>;
+
+    abstract setPassword(setPasswordInput: SetPasswordInput): SetPasswordResponse | Promise<SetPasswordResponse>;
+
+    abstract generateResetPassJWT(passResetInput: PassResetInputDto): PassResetResponse | Promise<PassResetResponse>;
 
     abstract sendOtp(sendOtpInput: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
 
-    abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
+    abstract updateUser(id: number, updateUserInput: UpdateUserInput): User | Promise<User>;
 
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
-    abstract updateUser(id: number, updateUserInput: UpdateUserInput): User | Promise<User>;
+    abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
 
     abstract verifyEmail(verifyEmailInput: VerifyEmailInput): User | Promise<User>;
 }

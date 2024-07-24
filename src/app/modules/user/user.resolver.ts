@@ -1,13 +1,13 @@
+import { UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../../shared/types/graphql.schema';
 import { UpdateUserInputDto } from './dtos/update-user.input';
 import { CreateUserInputDto } from './dtos/create-user.input';
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
-import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
-import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
 import { Roles } from '../../shared/decorators/roles.decorator';
 import { VerifyEmailInputDto } from './dtos/verify-email.input';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
+import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
 
 @Resolver(() => User)
 export class UserResolver {

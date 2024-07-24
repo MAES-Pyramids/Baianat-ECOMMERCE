@@ -8,20 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Otp {
-  id         Int       @id @default(autoincrement())
-  otp        String
-  userId     Int       @unique
-  otpType    String
-  createdAt  DateTime  @default(now())
-  expiresAt  DateTime
-
-  user       User      @relation(fields: [userId], references: [id])
-  
-  @@unique([userId, otpType])
-  @@map("otp")
-}
-
 model User {
   id           Int       @id @default(autoincrement())
   role         String    @default("user")
@@ -40,3 +26,18 @@ model User {
 
   @@map("users")
 }
+
+model Otp {
+  id         Int       @id @default(autoincrement())
+  otp        String
+  userId     Int       @unique
+  otpType    String
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime
+
+  user       User      @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, otpType])
+  @@map("otp")
+}
+
