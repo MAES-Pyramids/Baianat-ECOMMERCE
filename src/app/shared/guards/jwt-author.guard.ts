@@ -13,7 +13,6 @@ export class JwtAuthorizationGuard implements CanActivate {
     const user = request.user;
 
     const roles = this.reflector.get<string[]>(ROLES_KEY, context.getHandler());
-
     if (!roles) return true;
 
     if (user && user.role) return roles.includes(user.role);

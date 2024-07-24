@@ -8,22 +8,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Otp {
-  id         Int       @id @default(autoincrement())
-  otp        String
-  userId     Int       @unique
-  otpType    String
-  createdAt  DateTime  @default(now())
-  expiresAt  DateTime
-
-  user       User      @relation(fields: [userId], references: [id])
-  
-  @@unique([userId, otpType])
-  @@map("otp")
-}
-
 model User {
-  id           Int       @id @default(autoincrement())
+  id           Int       @id @default(autoincrement()) 
   role         String    @default("user")
 
   firstName    String
@@ -39,4 +25,45 @@ model User {
   otp          Otp?      @relation
 
   @@map("users")
+}
+
+model Otp {
+  id         Int       @id @default(autoincrement())
+  otp        String
+  userId     Int       @unique
+  otpType    String
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime
+
+  user       User      @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, otpType])
+  @@map("otp")
+}
+
+model Product {
+  id           Int         @id @default(autoincrement()) @unique
+  title        String
+  description  String
+  specifications Json?
+  price        Float
+  quantity     Int
+  images       String[]   @default([])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  categoryId   Int
+  category     Category?    @relation(fields: [categoryId], references: [id])
+  
+  @@map("products")
+}
+
+model Category {
+  id          Int        @id @default(autoincrement()) @unique
+  name        String
+  parentId    Int?
+  parent      Category? @relation("CategoryChildren", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryChildren")
+  products    Product[]
+  
+  @@map("categories")
 }

@@ -10,6 +10,9 @@ import { AuthModule } from './app/modules/auth/auth.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MailerModule } from './app/modules/mailer/mailer.module';
 import { DatabaseModule } from './app/modules/database/database.module';
+import { ProductModule } from './app/modules/product/product.module';
+import { JsonScalar } from './app/graphql/scalars/json.scalar';
+import { CategoryModule } from './app/modules/category/category.module';
 
 @Module({
   imports: [
@@ -29,6 +32,7 @@ import { DatabaseModule } from './app/modules/database/database.module';
         path: join(process.cwd(), 'src/app/shared/types/graphql.schema.ts'),
         outputAs: 'class',
       },
+      resolvers: { JSON: new JsonScalar() },
     }),
     EventEmitterModule.forRoot(),
     DatabaseModule,
@@ -36,6 +40,8 @@ import { DatabaseModule } from './app/modules/database/database.module';
     UserModule,
     AuthModule,
     OtpModule,
+    ProductModule,
+    CategoryModule,
   ],
   providers: [],
   controllers: [],
