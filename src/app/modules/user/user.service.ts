@@ -20,20 +20,23 @@ export class UserService {
     return this.prismaService.user.findUnique({ where });
   }
 
-  create(createUserInput: Prisma.UserCreateInput): Promise<User> {
+  async create(createUserInput: Prisma.UserCreateInput): Promise<User> {
     return this.prismaService.user.create({
       data: createUserInput,
     });
   }
 
-  update(id: number, updateUserInput: Prisma.UserUpdateInput): Promise<User> {
+  async update(
+    id: number,
+    updateUserInput: Prisma.UserUpdateInput,
+  ): Promise<User> {
     return this.prismaService.user.update({
       where: { id },
       data: updateUserInput,
     });
   }
 
-  remove(id: number): Promise<User> {
+  async remove(id: number): Promise<User> {
     return this.prismaService.user.delete({ where: { id } });
   }
 

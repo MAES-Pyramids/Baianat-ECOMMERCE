@@ -30,6 +30,26 @@ export class SetPasswordInput {
     password: string;
 }
 
+export class CreateProductInput {
+    title: string;
+    description: string;
+    specifications?: Nullable<JSON>;
+    price: number;
+    quantity: number;
+    images?: Nullable<string[]>;
+    categoryId: number;
+}
+
+export class UpdateProductInput {
+    title?: Nullable<string>;
+    description?: Nullable<string>;
+    specifications?: Nullable<JSON>;
+    price?: Nullable<number>;
+    quantity?: Nullable<number>;
+    images?: Nullable<string[]>;
+    categoryId?: Nullable<number>;
+}
+
 export class CreateUserInput {
     firstName: string;
     lastName?: Nullable<string>;
@@ -74,6 +94,10 @@ export class SetPasswordResponse {
 export abstract class IQuery {
     abstract me(): Nullable<User> | Promise<Nullable<User>>;
 
+    abstract products(): Nullable<Product>[] | Promise<Nullable<Product>[]>;
+
+    abstract product(id: number): Nullable<Product> | Promise<Nullable<Product>>;
+
     abstract users(): Nullable<User>[] | Promise<Nullable<User>[]>;
 
     abstract user(id: number): Nullable<User> | Promise<Nullable<User>>;
@@ -88,6 +112,12 @@ export abstract class IMutation {
 
     abstract generateResetPassJWT(passResetInput: PassResetInputDto): PassResetResponse | Promise<PassResetResponse>;
 
+    abstract createProduct(createProductInput: CreateProductInput): Product | Promise<Product>;
+
+    abstract updateProduct(id: number, updateProductInput: UpdateProductInput): Product | Promise<Product>;
+
+    abstract removeProduct(id: number): Nullable<Product> | Promise<Nullable<Product>>;
+
     abstract updateUser(id: number, updateUserInput: UpdateUserInput): User | Promise<User>;
 
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
@@ -97,6 +127,28 @@ export abstract class IMutation {
     abstract sendOtp(sendOtpInput: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
 
     abstract verifyEmail(verifyEmailInput: VerifyEmailInput): User | Promise<User>;
+}
+
+export class Product {
+    id: number;
+    title: string;
+    description: string;
+    specifications?: Nullable<JSON>;
+    price: number;
+    quantity: number;
+    images?: Nullable<string[]>;
+    createdAt: DateTime;
+    updatedAt: DateTime;
+    category: Category;
+}
+
+export class Category {
+    id: number;
+    name: string;
+    parentId?: Nullable<number>;
+    parent?: Nullable<Category>;
+    children?: Nullable<Category[]>;
+    products?: Nullable<Product[]>;
 }
 
 export class User {
@@ -115,5 +167,6 @@ export class SendOtpResponse {
     message?: Nullable<string>;
 }
 
+export type JSON = any;
 export type DateTime = any;
 type Nullable<T> = T | null;
