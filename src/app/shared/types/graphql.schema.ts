@@ -30,6 +30,16 @@ export class SetPasswordInput {
     password: string;
 }
 
+export class CreateCategoryInput {
+    name: string;
+    parentId?: Nullable<number>;
+}
+
+export class UpdateCategoryInput {
+    name?: Nullable<string>;
+    parentId?: Nullable<number>;
+}
+
 export class CreateProductInput {
     title: string;
     description: string;
@@ -94,6 +104,12 @@ export class SetPasswordResponse {
 export abstract class IQuery {
     abstract me(): Nullable<User> | Promise<Nullable<User>>;
 
+    abstract getTopCategories(): Category[] | Promise<Category[]>;
+
+    abstract getCategoryInfo(id: number): Nullable<Category> | Promise<Nullable<Category>>;
+
+    abstract getProductsByCategoryId(id: number): Product[] | Promise<Product[]>;
+
     abstract products(): Nullable<Product>[] | Promise<Nullable<Product>[]>;
 
     abstract product(id: number): Nullable<Product> | Promise<Nullable<Product>>;
@@ -112,6 +128,10 @@ export abstract class IMutation {
 
     abstract generateResetPassJWT(passResetInput: PassResetInputDto): PassResetResponse | Promise<PassResetResponse>;
 
+    abstract createCategory(createCategoryInput: CreateCategoryInput): Category | Promise<Category>;
+
+    abstract updateCategory(id: number, updateCategoryInput: UpdateCategoryInput): Category | Promise<Category>;
+
     abstract createProduct(createProductInput: CreateProductInput): Product | Promise<Product>;
 
     abstract updateProduct(id: number, updateProductInput: UpdateProductInput): Product | Promise<Product>;
@@ -129,6 +149,15 @@ export abstract class IMutation {
     abstract verifyEmail(verifyEmailInput: VerifyEmailInput): User | Promise<User>;
 }
 
+export class Category {
+    id: number;
+    name: string;
+    parentId?: Nullable<number>;
+    parent?: Nullable<Category>;
+    children?: Nullable<Category[]>;
+    products?: Nullable<Product[]>;
+}
+
 export class Product {
     id: number;
     title: string;
@@ -140,15 +169,6 @@ export class Product {
     createdAt: DateTime;
     updatedAt: DateTime;
     category: Category;
-}
-
-export class Category {
-    id: number;
-    name: string;
-    parentId?: Nullable<number>;
-    parent?: Nullable<Category>;
-    children?: Nullable<Category[]>;
-    products?: Nullable<Product[]>;
 }
 
 export class User {

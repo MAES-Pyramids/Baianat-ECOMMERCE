@@ -12,6 +12,7 @@ import { MailerModule } from './app/modules/mailer/mailer.module';
 import { DatabaseModule } from './app/modules/database/database.module';
 import { ProductModule } from './app/modules/product/product.module';
 import { JsonScalar } from './app/graphql/scalars/json.scalar';
+import { CategoryModule } from './app/modules/category/category.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { JsonScalar } from './app/graphql/scalars/json.scalar';
     AuthModule,
     OtpModule,
     ProductModule,
+    CategoryModule,
   ],
   providers: [],
   controllers: [],
