@@ -20,9 +20,14 @@ export class LoginInput {
     password: string;
 }
 
-export class SendOtpInput {
-    otpType: string;
+export class PassResetInputDto {
     email: string;
+    otp: string;
+}
+
+export class SetPasswordInput {
+    passwordResetToken: string;
+    password: string;
 }
 
 export class CreateUserInput {
@@ -41,9 +46,29 @@ export class UpdateUserInput {
     isSuspended?: Nullable<boolean>;
 }
 
+export class VerifyEmailInput {
+    email: string;
+    otp: string;
+}
+
+export class SendOtpInput {
+    otpType: string;
+    email: string;
+}
+
 export class AuthPayload {
     user: User;
     accessToken: string;
+}
+
+export class PassResetResponse {
+    success: boolean;
+    passwordResetToken?: Nullable<string>;
+}
+
+export class SetPasswordResponse {
+    success: boolean;
+    message?: Nullable<string>;
 }
 
 export abstract class IQuery {
@@ -55,22 +80,23 @@ export abstract class IQuery {
 }
 
 export abstract class IMutation {
-    abstract login(loginInput: LoginInput): AuthPayload | Promise<AuthPayload>;
-
     abstract signup(signupInput: SignupInput): User | Promise<User>;
 
-    abstract sendOtp(sendOtpInput: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
+    abstract login(loginInput: LoginInput): AuthPayload | Promise<AuthPayload>;
 
-    abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
+    abstract setPassword(setPasswordInput: SetPasswordInput): SetPasswordResponse | Promise<SetPasswordResponse>;
+
+    abstract generateResetPassJWT(passResetInput: PassResetInputDto): PassResetResponse | Promise<PassResetResponse>;
+
+    abstract updateUser(id: number, updateUserInput: UpdateUserInput): User | Promise<User>;
 
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
-    abstract updateUser(id: number, updateUserInput: UpdateUserInput): User | Promise<User>;
-}
+    abstract removeUser(id: number): Nullable<User> | Promise<Nullable<User>>;
 
-export class SendOtpResponse {
-    success: boolean;
-    message?: Nullable<string>;
+    abstract sendOtp(sendOtpInput: SendOtpInput): SendOtpResponse | Promise<SendOtpResponse>;
+
+    abstract verifyEmail(verifyEmailInput: VerifyEmailInput): User | Promise<User>;
 }
 
 export class User {
@@ -82,6 +108,11 @@ export class User {
     password: string;
     isVerified: boolean;
     isSuspended: boolean;
+}
+
+export class SendOtpResponse {
+    success: boolean;
+    message?: Nullable<string>;
 }
 
 export type DateTime = any;
