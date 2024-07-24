@@ -4,7 +4,6 @@ import { OtpService } from '../otp/otp.service';
 import { LoginInputDto } from './dtos/login-input.dto';
 import { OtpTypes } from '../../shared/enums/otps.enum';
 import { SignupInputDto } from './dtos/signup-input.dto';
-import { mailTypes } from '../../shared/enums/mails.enum';
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { AuthPayload, User } from '../../shared/types/graphql.schema';
 import { GraphQLAuthGuard } from '../../shared/guards/graphql-authen.guard';

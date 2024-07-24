@@ -27,6 +27,11 @@ input UpdateUserInput {
   isSuspended: Boolean
 }
 
+input VerifyEmailInput {
+  email: String!
+  otp: String!
+}
+
 type Query {
   users: [User]!
   user(id: Int!): User
@@ -36,4 +41,5 @@ type Mutation {
   removeUser(id: Int!): User
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(id: Int!, updateUserInput: UpdateUserInput!): User!
+  verifyEmail(verifyEmailInput: VerifyEmailInput!): User!
 }

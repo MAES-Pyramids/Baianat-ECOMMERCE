@@ -41,6 +41,11 @@ export class UpdateUserInput {
     isSuspended?: Nullable<boolean>;
 }
 
+export class VerifyEmailInput {
+    email: string;
+    otp: string;
+}
+
 export class AuthPayload {
     user: User;
     accessToken: string;
@@ -66,6 +71,8 @@ export abstract class IMutation {
     abstract createUser(createUserInput: CreateUserInput): User | Promise<User>;
 
     abstract updateUser(id: number, updateUserInput: UpdateUserInput): User | Promise<User>;
+
+    abstract verifyEmail(verifyEmailInput: VerifyEmailInput): User | Promise<User>;
 }
 
 export class SendOtpResponse {
