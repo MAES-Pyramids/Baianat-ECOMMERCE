@@ -1,14 +1,21 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
+import { Roles } from '../../shared/decorators/roles.decorator';
 import { Category, Product } from '../../shared/types/graphql.schema';
 import { CreateCategoryInputDto } from './dtos/create-category.input';
 import { UpdateCategoryInputDto } from './dtos/update-category.input';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
+import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
 
 @Resolver(() => Category)
+@UseGuards(JwtAuthenticationGuard)
 export class CategoryResolver {
   constructor(private categoryService: CategoryService) {}
 
   @Mutation(() => Category)
+  @UseGuards(JwtAuthorizationGuard)
+  @Roles('admin')
   async createCategory(
     @Args('createCategoryInput') { name, parentId }: CreateCategoryInputDto,
   ) {
@@ -17,6 +24,8 @@ export class CategoryResolver {
   }
 
   @Mutation(() => Category)
+  @UseGuards(JwtAuthorizationGuard)
+  @Roles('admin')
   async updateCategory(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInputDto,

@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "start:prod": "cross-env NODE_ENV=dev node dist/main",
+    "start:prod": "cross-env NODE_ENV=prod node dist/main",
     "start": "cross-env NODE_ENV=dev nest start",
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:debug": "cross-env NODE_ENV=dev nest start --debug --watch",

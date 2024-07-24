@@ -1,14 +1,14 @@
 import { UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { SendOtpResponse, User } from '../../shared/types/graphql.schema';
+import { SendOtpInputDto } from './dtos/send-otp.dto';
 import { UpdateUserInputDto } from './dtos/update-user.input';
 import { CreateUserInputDto } from './dtos/create-user.input';
 import { Roles } from '../../shared/decorators/roles.decorator';
 import { VerifyEmailInputDto } from './dtos/verify-email.input';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
+import { SendOtpResponse, User } from '../../shared/types/graphql.schema';
 import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
-import { SendOtpInputDto } from './dtos/send-otp.dto';
+import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
 
 @Resolver(() => User)
 export class UserResolver {
