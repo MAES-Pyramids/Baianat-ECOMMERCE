@@ -13,7 +13,11 @@ import { OtpService } from '../otp/otp.service';
 import { UserService } from '../user/user.service';
 import { OtpTypes } from '../../shared/enums/otps.enum';
 import { SignupInputDto } from './dtos/signup-input.dto';
-import { User, AuthPayload } from '../../shared/types/graphql.schema';
+import {
+  User,
+  AuthPayload,
+  PassResetResponse,
+} from '../../shared/types/graphql.schema';
 import { createAuthPayload } from '../../shared/utils/auth-payload.util';
 
 const scrypt = promisify(_scrypt);
@@ -42,7 +46,15 @@ export class AuthService {
 
   async signup(signupInput: SignupInputDto): Promise<User> {
     // Note: Email uniqueness is managed by the Prisma exception filter. Checking for email existence manually is unnecessary and avoids redundant database queries.
-    return this.userService.create(signupInput);
+    const user = await this.userService.create(signupInput);
+
+    await this.otpService.createAndSendOtp(
+      user.id,
+      user.email,
+      OtpTypes.VERIFY_ACCOUNT,
+    );
+
+    return user;
   }
 
   async login(user: User): Promise<AuthPayload> {
@@ -58,7 +70,10 @@ export class AuthService {
     return { accessToken, user };
   }
 
-  async generateResetPassJWT(email: string, otp: string): Promise<string> {
+  async generateResetPassJWT(
+    email: string,
+    otp: string,
+  ): Promise<PassResetResponse> {
     const user = await this.userService.findOne({ email });
     if (!user) throw new HttpException('email not found', HttpStatus.NOT_FOUND);
 
@@ -71,7 +86,11 @@ export class AuthService {
 
     const secret = process.env.JWT_PASS_SECRET;
     const options = { expiresIn: process.env.JWT_PASS_RESET_IN };
-    return this.jwtService.sign({ id: user.id }, { secret, ...options });
+    const passwordResetToken = this.jwtService.sign(
+      { id: user.id },
+      { secret, ...options },
+    );
+    return { success: true, passwordResetToken };
   }
 
   async setPassword(
