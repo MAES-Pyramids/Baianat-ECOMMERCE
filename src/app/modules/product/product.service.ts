@@ -2,29 +2,40 @@ import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { Product } from '../../shared/types/graphql.schema';
 import { DatabaseService } from '../database/database.service';
+import { CreateProductInputDto } from './dto/create-product.input';
+import { I18nContext } from 'nestjs-i18n';
 
 @Injectable()
 export class ProductService {
   constructor(private readonly prismaService: DatabaseService) {}
 
   async findAll(): Promise<Product[]> {
-    return this.prismaService.product.findMany({
-      include: { category: true },
+    const locale = I18nContext.current().lang;
+    const products = await this.prismaService.product.findMany({
+      include: { category: true, translations: { where: { locale } } },
+    });
+    return products.map((product) => {
+      const { translations, ...productData } = product;
+      const translation = translations[0] || {};
+      return { ...productData, ...translation };
     });
   }
 
   async findOne(where: Prisma.ProductWhereUniqueInput): Promise<Product> {
-    return this.prismaService.product.findUnique({
+    const locale = I18nContext.current().lang;
+    const product = await this.prismaService.product.findUnique({
       where,
-      include: { category: true },
+      include: { category: true, translations: { where: { locale } } },
     });
+    const { translations, ...productData } = product;
+    const translation = translations[0] || {};
+    return { ...productData, ...translation };
   }
 
-  async create(
-    createProductInput: Prisma.ProductCreateInput,
-  ): Promise<Product> {
+  async create(createProductInput: CreateProductInputDto): Promise<Product> {
+    const { translations, ...productData } = createProductInput;
     return this.prismaService.product.create({
-      data: createProductInput,
+      data: { ...productData, translations: { create: translations } },
       include: { category: true },
     });
   }

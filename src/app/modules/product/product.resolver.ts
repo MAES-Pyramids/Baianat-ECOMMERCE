@@ -1,4 +1,3 @@
-import { I18nContext } from 'nestjs-i18n';
 import { UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from '../../shared/types/graphql.schema';
@@ -15,14 +14,12 @@ export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
   @Query(() => [Product])
-  products() {
-    // console.log(I18nContext.current().lang);
+  products(): Promise<Product[]> {
     return this.productService.findAll();
   }
 
   @Query(() => Product)
   product(@Args('id', { type: () => Int }) id: number): Promise<Product> {
-    // console.log(I18nContext.current().lang);
     return this.productService.findOne({ id });
   }
 
@@ -31,7 +28,7 @@ export class ProductResolver {
   @Roles('admin')
   createProduct(
     @Args('createProductInput') createProductInput: CreateProductInputDto,
-  ) {
+  ): Promise<Product> {
     return this.productService.create(createProductInput);
   }
 
@@ -41,14 +38,14 @@ export class ProductResolver {
   updateProduct(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateProductInput') updateProductInput: UpdateProductInputDto,
-  ) {
+  ): Promise<Product> {
     return this.productService.update(id, updateProductInput);
   }
 
   @Mutation(() => Product)
   @UseGuards(JwtAuthorizationGuard)
   @Roles('admin')
-  removeProduct(@Args('id', { type: () => Int }) id: number) {
+  removeProduct(@Args('id', { type: () => Int }) id: number): Promise<Product> {
     return this.productService.remove(id);
   }
 }

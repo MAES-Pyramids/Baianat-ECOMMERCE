@@ -48,6 +48,7 @@ export class CreateProductInput {
     quantity: number;
     images?: Nullable<string[]>;
     categoryId: number;
+    translations?: Nullable<CreateTranslationInput[]>;
 }
 
 export class UpdateProductInput {
@@ -58,6 +59,12 @@ export class UpdateProductInput {
     quantity?: Nullable<number>;
     images?: Nullable<string[]>;
     categoryId?: Nullable<number>;
+}
+
+export class CreateTranslationInput {
+    locale: string;
+    title: string;
+    description: string;
 }
 
 export class CreateUserInput {
@@ -169,6 +176,15 @@ export class Product {
     createdAt: DateTime;
     updatedAt: DateTime;
     category: Category;
+    translations?: Nullable<Translation[]>;
+}
+
+export class Translation {
+    id: number;
+    locale: string;
+    title: string;
+    description: string;
+    product: Product;
 }
 
 export class User {
