@@ -1,4 +1,4 @@
-# E-commerce Backend System
+# E-commerce Backend Assignment
 
 ## Overview
 This project aims to develop a robust and scalable backend system for an e-commerce platform using Node.js and Nest.js. It includes essential functionalities such as user management, product management, and order processing.
@@ -11,6 +11,10 @@ This project aims to develop a robust and scalable backend system for an e-comme
 - **Database:** PostgreSQL
 - **Authentication:** JWT (JSON Web Tokens)
 - **Developer Tool:** GraphQL
+
+| Components            | 
+| -------                         |
+| <img src="https://github.com/Skill-Sync/SkillSync-Backend/blob/main/.github/etc/secrets/Components.png" width="1000" />   | 
 
 ## Testing Setup
 1. Add the `.env.prod` file to the following path: ./etc/secrets/.env.prod
