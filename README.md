@@ -14,7 +14,7 @@ This project aims to develop a robust and scalable backend system for an e-comme
 
 ## Testing Setup
 1. Add the `.env.prod` file to the following path: .\etc\secrets.env.prod
-2. Add the database `.env` file to this path: .\prisma.env
+2. Add the database `.env` file to this path: .\prisma\.env
 3. Run the following commands to start the application:
 ````
 docker compose -up
