@@ -1,6 +1,6 @@
 import { join } from 'path';
 import Configs from '@shared/config';
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { OtpModule } from './app/modules/otp/otp.module';
@@ -19,6 +19,10 @@ import {
   HeaderResolver,
   AcceptLanguageResolver,
 } from 'nestjs-i18n';
+import { LanguageModule } from './app/modules/language/language.module';
+import { LanguageService } from './app/modules/language/language.service';
+import { APP_GUARD } from '@nestjs/core';
+import { LangGuard } from './app/shared/guards/lang.guard';
 
 @Module({
   imports: [
@@ -60,8 +64,28 @@ import {
     OtpModule,
     ProductModule,
     CategoryModule,
+    LanguageModule,
   ],
-  providers: [],
+  providers: [
+    LanguageService,
+    {
+      provide: APP_GUARD,
+      useClass: LangGuard,
+    },
+  ],
   controllers: [],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private languageService: LanguageService) {}
+
+  async onModuleInit() {
+    const languages = await this.languageService.getLanguages();
+    if (languages.length === 0) {
+      await this.languageService.createLanguage({
+        code: 'en',
+        name: 'English',
+      });
+      await this.languageService.setDefaultLanguage({ code: 'en' });
+    }
+  }
+}

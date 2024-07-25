@@ -80,3 +80,10 @@ model Category {
   
   @@map("categories")
 }
+
+model Language {
+  id        Int     @id @default(autoincrement())
+  code      String  @unique
+  name      String
+  isDefault Boolean @default(false)
+}
