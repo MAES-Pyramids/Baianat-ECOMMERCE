@@ -1,8 +1,8 @@
-import { Module, OnModuleInit } from '@nestjs/common';
 import { join } from 'path';
 import Configs from '@shared/config';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { OtpModule } from './app/modules/otp/otp.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { UserModule } from './app/modules/user/user.module';
