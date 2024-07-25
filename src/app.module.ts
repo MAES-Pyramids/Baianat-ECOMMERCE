@@ -1,6 +1,6 @@
+import { Module, OnModuleInit } from '@nestjs/common';
 import { join } from 'path';
 import Configs from '@shared/config';
-import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { OtpModule } from './app/modules/otp/otp.module';
@@ -13,16 +13,8 @@ import { MailerModule } from './app/modules/mailer/mailer.module';
 import { ProductModule } from './app/modules/product/product.module';
 import { CategoryModule } from './app/modules/category/category.module';
 import { DatabaseModule } from './app/modules/database/database.module';
-import {
-  I18nModule,
-  QueryResolver,
-  HeaderResolver,
-  AcceptLanguageResolver,
-} from 'nestjs-i18n';
 import { LanguageModule } from './app/modules/language/language.module';
 import { LanguageService } from './app/modules/language/language.service';
-import { APP_GUARD } from '@nestjs/core';
-import { LangGuard } from './app/shared/guards/lang.guard';
 
 @Module({
   imports: [
@@ -44,18 +36,6 @@ import { LangGuard } from './app/shared/guards/lang.guard';
       },
       resolvers: { JSON: new JsonScalar() },
     }),
-    I18nModule.forRoot({
-      fallbackLanguage: 'en',
-      loaderOptions: {
-        path: join('dist', 'apps', 'api', 'i18n/'),
-        watch: true,
-      },
-      resolvers: [
-        new QueryResolver(['lang']),
-        AcceptLanguageResolver,
-        new HeaderResolver(['x-lang']),
-      ],
-    }),
     EventEmitterModule.forRoot(),
     DatabaseModule,
     MailerModule,
@@ -66,17 +46,11 @@ import { LangGuard } from './app/shared/guards/lang.guard';
     CategoryModule,
     LanguageModule,
   ],
-  providers: [
-    LanguageService,
-    {
-      provide: APP_GUARD,
-      useClass: LangGuard,
-    },
-  ],
+  providers: [],
   controllers: [],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private languageService: LanguageService) {}
+  constructor(private readonly languageService: LanguageService) {}
 
   async onModuleInit() {
     const languages = await this.languageService.getLanguages();

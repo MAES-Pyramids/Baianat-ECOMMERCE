@@ -3,14 +3,17 @@ import { Injectable } from '@nestjs/common';
 import { Product } from '../../shared/types/graphql.schema';
 import { DatabaseService } from '../database/database.service';
 import { CreateProductInputDto } from './dto/create-product.input';
-import { I18nContext } from 'nestjs-i18n';
+import { LanguageContextProvider } from '../../shared/services/language-context.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly prismaService: DatabaseService) {}
+  constructor(
+    private readonly prismaService: DatabaseService,
+    private readonly languageContextProvider: LanguageContextProvider,
+  ) {}
 
   async findAll(): Promise<Product[]> {
-    const locale = I18nContext.current().lang;
+    const locale = this.languageContextProvider.getLanguage();
     const products = await this.prismaService.product.findMany({
       include: { category: true, translations: { where: { locale } } },
     });
@@ -22,7 +25,7 @@ export class ProductService {
   }
 
   async findOne(where: Prisma.ProductWhereUniqueInput): Promise<Product> {
-    const locale = I18nContext.current().lang;
+    const locale = this.languageContextProvider.getLanguage();
     const product = await this.prismaService.product.findUnique({
       where,
       include: { category: true, translations: { where: { locale } } },
