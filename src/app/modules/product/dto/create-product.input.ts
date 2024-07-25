@@ -6,7 +6,10 @@ import {
   IsObject,
   IsOptional,
   IsNotEmpty,
+  IsEnum,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateProductInputDto {
   @IsString()
@@ -37,4 +40,22 @@ export class CreateProductInputDto {
   @IsInt()
   @IsNotEmpty()
   categoryId: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateTranslationInputDto)
+  translations: CreateTranslationInputDto[];
+}
+
+export class CreateTranslationInputDto {
+  @IsString()
+  @IsEnum(['ar', 'fr'], { message: 'we support only ar or fr translations' })
+  locale: string;
+
+  @IsString()
+  title: string;
+
+  @IsString()
+  description: string;
 }
