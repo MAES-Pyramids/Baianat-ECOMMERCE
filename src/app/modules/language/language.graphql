@@ -1,0 +1,25 @@
+type Language {
+  id: Int!
+  code: String!
+  name: String!
+  isDefault: Boolean!
+}
+
+input CreateLanguageInput {
+  code: String!
+  name: String!
+}
+
+input SetDefaultLanguageInput {
+  code: String!
+}
+
+type Query {
+  languages: [Language!]!
+  defaultLanguage: Language!
+}
+
+type Mutation {
+  createLanguage(data: CreateLanguageInput!): Language!
+  setDefaultLanguage(data: SetDefaultLanguageInput!): Language!
+}

@@ -11,6 +11,15 @@ type Product {
   createdAt: DateTime!
   updatedAt: DateTime!
   category: Category!
+  translations: [Translation!]
+}
+
+type Translation {
+  id: Int!
+  locale: String!
+  title: String!
+  description: String!
+  product: Product!
 }
 
 input CreateProductInput {
@@ -21,6 +30,7 @@ input CreateProductInput {
   quantity: Int!
   images: [String!]
   categoryId: Int!
+  translations: [CreateTranslationInput!]
 }
 
 input UpdateProductInput {
@@ -31,6 +41,12 @@ input UpdateProductInput {
   quantity: Int
   images: [String!]
   categoryId: Int
+}
+
+input CreateTranslationInput {
+  locale: String!
+  title: String!
+  description: String!
 }
 
 type Query {

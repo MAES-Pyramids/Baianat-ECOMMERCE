@@ -40,6 +40,15 @@ export class UpdateCategoryInput {
     parentId?: Nullable<number>;
 }
 
+export class CreateLanguageInput {
+    code: string;
+    name: string;
+}
+
+export class SetDefaultLanguageInput {
+    code: string;
+}
+
 export class CreateProductInput {
     title: string;
     description: string;
@@ -48,6 +57,7 @@ export class CreateProductInput {
     quantity: number;
     images?: Nullable<string[]>;
     categoryId: number;
+    translations?: Nullable<CreateTranslationInput[]>;
 }
 
 export class UpdateProductInput {
@@ -58,6 +68,12 @@ export class UpdateProductInput {
     quantity?: Nullable<number>;
     images?: Nullable<string[]>;
     categoryId?: Nullable<number>;
+}
+
+export class CreateTranslationInput {
+    locale: string;
+    title: string;
+    description: string;
 }
 
 export class CreateUserInput {
@@ -110,6 +126,10 @@ export abstract class IQuery {
 
     abstract getProductsByCategoryId(id: number): Product[] | Promise<Product[]>;
 
+    abstract languages(): Language[] | Promise<Language[]>;
+
+    abstract defaultLanguage(): Language | Promise<Language>;
+
     abstract products(): Nullable<Product>[] | Promise<Nullable<Product>[]>;
 
     abstract product(id: number): Nullable<Product> | Promise<Nullable<Product>>;
@@ -131,6 +151,10 @@ export abstract class IMutation {
     abstract createCategory(createCategoryInput: CreateCategoryInput): Category | Promise<Category>;
 
     abstract updateCategory(id: number, updateCategoryInput: UpdateCategoryInput): Category | Promise<Category>;
+
+    abstract createLanguage(data: CreateLanguageInput): Language | Promise<Language>;
+
+    abstract setDefaultLanguage(data: SetDefaultLanguageInput): Language | Promise<Language>;
 
     abstract createProduct(createProductInput: CreateProductInput): Product | Promise<Product>;
 
@@ -158,6 +182,13 @@ export class Category {
     products?: Nullable<Product[]>;
 }
 
+export class Language {
+    id: number;
+    code: string;
+    name: string;
+    isDefault: boolean;
+}
+
 export class Product {
     id: number;
     title: string;
@@ -169,6 +200,15 @@ export class Product {
     createdAt: DateTime;
     updatedAt: DateTime;
     category: Category;
+    translations?: Nullable<Translation[]>;
+}
+
+export class Translation {
+    id: number;
+    locale: string;
+    title: string;
+    description: string;
+    product: Product;
 }
 
 export class User {

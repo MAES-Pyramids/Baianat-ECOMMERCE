@@ -53,8 +53,21 @@ model Product {
   updatedAt    DateTime    @updatedAt
   categoryId   Int
   category     Category?    @relation(fields: [categoryId], references: [id])
+  translations   Translation[]
   
   @@map("products")
+}
+ 
+ model Translation {
+  id         Int      @id @default(autoincrement()) @unique
+  locale     String
+  title      String
+  description String
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id])
+  
+  @@unique([productId, locale])
+  @@map("translations")
 }
 
 model Category {
@@ -66,4 +79,11 @@ model Category {
   products    Product[]
   
   @@map("categories")
+}
+
+model Language {
+  id        Int     @id @default(autoincrement())
+  code      String  @unique
+  name      String
+  isDefault Boolean @default(false)
 }

@@ -2,29 +2,43 @@ import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { Product } from '../../shared/types/graphql.schema';
 import { DatabaseService } from '../database/database.service';
+import { CreateProductInputDto } from './dto/create-product.input';
+import { LanguageContextProvider } from '../../shared/services/language-context.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly prismaService: DatabaseService) {}
+  constructor(
+    private readonly prismaService: DatabaseService,
+    private readonly languageContextProvider: LanguageContextProvider,
+  ) {}
 
   async findAll(): Promise<Product[]> {
-    return this.prismaService.product.findMany({
-      include: { category: true },
+    const locale = this.languageContextProvider.getLanguage();
+    const products = await this.prismaService.product.findMany({
+      include: { category: true, translations: { where: { locale } } },
+    });
+    return products.map((product) => {
+      const { translations, ...productData } = product;
+      const translation = translations[0] || {};
+      return { ...productData, ...translation };
     });
   }
 
   async findOne(where: Prisma.ProductWhereUniqueInput): Promise<Product> {
-    return this.prismaService.product.findUnique({
+    const locale = this.languageContextProvider.getLanguage();
+    const product = await this.prismaService.product.findUnique({
       where,
-      include: { category: true },
+      include: { category: true, translations: { where: { locale } } },
     });
+    const { translations, ...productData } = product;
+    const translation = translations[0] || {};
+    return { ...productData, ...translation };
   }
 
-  async create(
-    createProductInput: Prisma.ProductCreateInput,
-  ): Promise<Product> {
+  async create(createProductInput: CreateProductInputDto): Promise<Product> {
+    const { translations, ...productData } = createProductInput;
     return this.prismaService.product.create({
-      data: createProductInput,
+      data: { ...productData, translations: { create: translations } },
       include: { category: true },
     });
   }
