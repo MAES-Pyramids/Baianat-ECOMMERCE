@@ -1,3 +1,4 @@
+import { I18nContext } from 'nestjs-i18n';
 import { UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from '../../shared/types/graphql.schema';
@@ -15,11 +16,13 @@ export class ProductResolver {
 
   @Query(() => [Product])
   products() {
+    // console.log(I18nContext.current().lang);
     return this.productService.findAll();
   }
 
   @Query(() => Product)
   product(@Args('id', { type: () => Int }) id: number): Promise<Product> {
+    // console.log(I18nContext.current().lang);
     return this.productService.findOne({ id });
   }
 
