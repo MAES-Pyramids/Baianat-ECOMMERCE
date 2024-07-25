@@ -14,7 +14,7 @@ This project aims to develop a robust and scalable backend system for an e-comme
 
 | Components            | 
 | -------                         |
-| <img src="https://github.com/Skill-Sync/SkillSync-Backend/blob/main/.github/etc/secrets/Components.png" width="1000" />   | 
+| <img src="https://github.com/MAES-Pyramids/Baianat-ECOMMERCE/blob/main/etc/imgs/Components.png" width="1000" />   | 
 
 ## Testing Setup
 1. Add the `.env.prod` file to the following path: ./etc/secrets/.env.prod
