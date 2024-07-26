@@ -31,7 +31,7 @@ npm run start:prod
 
 ## Postman Workspace for Testing
 Use the following Postman shared workspace for testing all queries and mutations:
-[Postman Workspace](https://www.postman.com/cloudy-astronaut-164609/workspace/e-commerce-assignment/collection/66a1699e782978cb4e55a43c?action=share&creator=37127689&active-environment=37127689-0bec2869-3779-4e1f-903a-658c4bc9b44b)
+[Postman Workspace](https://cloudy-astronaut-164609.postman.co/workspace/E-commerce-Assignment~18f092a0-b859-444c-8d1d-5b2d3d0a57db/collection/66a1699e782978cb4e55a43c?action=share&creator=37127689&active-environment=37127689-0bec2869-3779-4e1f-903a-658c4bc9b44b)
 
 ----
 
