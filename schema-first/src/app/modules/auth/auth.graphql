@@ -1,0 +1,47 @@
+type AuthPayload {
+  user: User!
+  accessToken: String!
+}
+
+type PassResetResponse {
+  success: Boolean!
+  passwordResetToken: String
+}
+
+type SetPasswordResponse {
+  success: Boolean!
+  message: String
+}
+
+input SignupInput {
+  firstName: String!
+  lastName: String
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input PassResetInputDto {
+  email: String!
+  otp: String!
+}
+
+input SetPasswordInput {
+  passwordResetToken: String!
+  password: String!
+}
+
+type Query {
+  me: User
+}
+
+type Mutation {
+  signup(signupInput: SignupInput!): User!
+  login(loginInput: LoginInput!): AuthPayload!
+  setPassword(setPasswordInput: SetPasswordInput!): SetPasswordResponse!
+  generateResetPassJWT(passResetInput: PassResetInputDto!): PassResetResponse!
+}

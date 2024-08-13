@@ -1,12 +1,11 @@
 import {
+  User,
   AuthPayload,
   PassResetResponse,
   SetPasswordResponse,
-  User,
 } from '../../shared/types/graphql.schema';
 import { UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginInputDto } from './dtos/login-input.dto';
 import { SignupInputDto } from './dtos/signup-input.dto';
 import { PassResetInputDto } from './dtos/reset-pass.input';
 import { SetPasswordInputDto } from './dtos/set-pass.input';
@@ -26,10 +25,7 @@ export class AuthResolver {
 
   @Mutation(() => AuthPayload)
   @UseGuards(GraphQLAuthGuard)
-  async login(
-    @Args('loginInput') loginInput: LoginInputDto,
-    @Context() context,
-  ): Promise<AuthPayload> {
+  async login(@Context() context): Promise<AuthPayload> {
     return this.authService.login(context.user);
   }
 

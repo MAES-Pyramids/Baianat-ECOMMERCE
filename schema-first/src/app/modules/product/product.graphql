@@ -1,0 +1,61 @@
+scalar JSON
+
+type Product {
+  id: Int!
+  title: String!
+  description: String!
+  specifications: JSON
+  price: Float!
+  quantity: Int!
+  images: [String!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: Category!
+  translations: [Translation!]
+}
+
+type Translation {
+  id: Int!
+  locale: String!
+  title: String!
+  description: String!
+  product: Product!
+}
+
+input CreateProductInput {
+  title: String!
+  description: String!
+  specifications: JSON
+  price: Float!
+  quantity: Int!
+  images: [String!]
+  categoryId: Int!
+  translations: [CreateTranslationInput!]
+}
+
+input UpdateProductInput {
+  title: String
+  description: String
+  specifications: JSON
+  price: Float
+  quantity: Int
+  images: [String!]
+  categoryId: Int
+}
+
+input CreateTranslationInput {
+  locale: String!
+  title: String!
+  description: String!
+}
+
+type Query {
+  products: [Product]!
+  product(id: Int!): Product
+}
+
+type Mutation {
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
+  removeProduct(id: Int!): Product
+}
