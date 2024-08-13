@@ -16,7 +16,7 @@ This project aims to develop a robust and scalable backend system for an e-comme
 
 | Components                                                                                                  |
 | ----------------------------------------------------------------------------------------------------------- |
-| <img src="https://github.com/MAES-Pyramids/Baianat-ECOMMERCE/blob/main/imgs/Components.png" width="1000" /> |
+| <img src="https://github.com/MAES-Pyramids/Baianat-ECOMMERCE/blob/main/.imgs/Components.png" width="1000" /> |
 
 ## Testing Setup
 
