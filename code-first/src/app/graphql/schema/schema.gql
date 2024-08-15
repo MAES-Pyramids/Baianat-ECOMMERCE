@@ -18,7 +18,7 @@ type User {
   isSuspended: Boolean!
 }
 
-type AuthPayload {
+type AuthResponse {
   user: User!
   accessToken: String!
 }
@@ -99,8 +99,8 @@ type Mutation {
   removeUser(id: Int!): User!
   verifyEmail(verifyEmailInput: VerifyEmailInput!): User!
   sendOtp(sendOtpInput: SendOtpInput!): SendOtpResponse!
-  signup(signupInput: SignupInput!): AuthPayload!
-  login(loginInput: LoginInput!): AuthPayload!
+  signup(signupInput: SignupInput!): User!
+  login(loginInput: LoginInput!): AuthResponse!
   generateResetPassJWT(passResetInput: PassResetInput!): PassResetResponse!
   setPassword(setPasswordInput: SetPasswordInput!): SetPasswordResponse!
   createProduct(createProductInput: CreateProductInput!): Product!

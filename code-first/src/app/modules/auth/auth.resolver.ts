@@ -6,7 +6,7 @@ import { SetPasswordInput } from './dtos/inputs/set-pass.input';
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { GraphQLAuthGuard } from '../../shared/guards/graphql-authen.guard';
 import { User } from '../user/models/user.model';
-import { AuthPayload } from './dtos/responses/auth.response';
+import { AuthResponse } from './dtos/responses/auth.response';
 import { PassResetResponse } from './dtos/responses/pass-reset.response';
 import { SetPasswordResponse } from './dtos/responses/set-password.response';
 import { LoginInput } from './dtos/inputs/login-input';
@@ -15,32 +15,36 @@ import { LoginInput } from './dtos/inputs/login-input';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => AuthPayload)
-  async signup(@Args('signupInput') signupInput: SignupInput): Promise<User> {
+  @Mutation(() => User)
+  async signup(
+    @Args('signupInput') signupInput: SignupInput,
+  ): Promise<Partial<User>> {
     return this.authService.signup(signupInput);
   }
 
-  @Mutation(() => AuthPayload)
+  @Mutation(() => AuthResponse)
   @UseGuards(GraphQLAuthGuard)
   async login(
     @Context() context,
-    @Args('loginInput') loginInput: LoginInput,
-  ): Promise<AuthPayload> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @Args('loginInput') _: LoginInput,
+  ): Promise<AuthResponse> {
     return this.authService.login(context.user);
   }
 
   @Mutation(() => PassResetResponse)
   async generateResetPassJWT(
-    @Args('passResetInput') { email, otp }: PassResetInput,
+    @Args('passResetInput') passResetInput: PassResetInput,
   ): Promise<PassResetResponse> {
+    const { email, otp } = passResetInput;
     return this.authService.generateResetPassJWT(email, otp);
   }
 
   @Mutation(() => SetPasswordResponse)
   async setPassword(
-    @Args('setPasswordInput')
-    { passwordResetToken, password }: SetPasswordInput,
+    @Args('setPasswordInput') setPasswordInput: SetPasswordInput,
   ): Promise<SetPasswordResponse> {
+    const { passwordResetToken, password } = setPasswordInput;
     await this.authService.setPassword(passwordResetToken, password);
     return { success: true, message: 'Password set successfully' };
   }

@@ -92,7 +92,7 @@ export class SendOtpInput {
   email: string;
 }
 
-export class AuthPayload {
+export class AuthResponse {
   user: User;
   accessToken: string;
 }
@@ -134,7 +134,7 @@ export abstract class IQuery {
 export abstract class IMutation {
   abstract signup(signupInput: SignupInput): User | Promise<User>;
 
-  abstract login(loginInput: LoginInput): AuthPayload | Promise<AuthPayload>;
+  abstract login(loginInput: LoginInput): AuthResponse | Promise<AuthResponse>;
 
   abstract setPassword(
     setPasswordInput: SetPasswordInput,

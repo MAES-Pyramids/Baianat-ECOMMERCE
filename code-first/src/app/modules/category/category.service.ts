@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '../database/database.service';
 import { Prisma } from '@prisma/client';
-import { Category } from './models/category.model';
+import { Category } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
 import { Product } from '../product/models/product.model';
+import { DatabaseService } from '../database/database.service';
 import { CreateCategoryInput } from './dtos/inputs/create-category.input';
 
 @Injectable()

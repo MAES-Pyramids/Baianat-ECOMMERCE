@@ -7,21 +7,16 @@ import {
 } from '@nestjs/common';
 import * as _ from 'lodash';
 import { promisify } from 'util';
+import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { scrypt as _scrypt } from 'crypto';
 import { OtpService } from '../otp/otp.service';
 import { UserService } from '../user/user.service';
 import { OtpTypes } from '../../shared/enums/otps.enum';
 import { SignupInput } from './dtos/inputs/signup-input';
-// import {
-//   User,
-//   AuthPayload,
-//   PassResetResponse,
-// } from '../../shared/types/graphql.schema';
+import { AuthResponse } from './dtos/responses/auth.response';
 import { createAuthPayload } from '../../shared/utils/auth-payload.util';
 import { PassResetResponse } from './dtos/responses/pass-reset.response';
-import { User } from '../user/models/user.model';
-import { AuthPayload } from './dtos/responses/auth.response';
 
 const scrypt = promisify(_scrypt);
 
@@ -47,7 +42,7 @@ export class AuthService {
     else return null;
   }
 
-  async signup(signupInput: SignupInput): Promise<User> {
+  async signup(signupInput: SignupInput): Promise<Partial<User>> {
     // Note: Email uniqueness is managed by the Prisma exception filter. Checking for email existence manually is unnecessary and avoids redundant database queries.
     const user = await this.userService.create(signupInput);
 
@@ -60,7 +55,7 @@ export class AuthService {
     return user;
   }
 
-  async login(user: User): Promise<AuthPayload> {
+  async login(user: User): Promise<AuthResponse> {
     const secret = process.env.JWT_SECRET;
     const jwtPayload = createAuthPayload(user);
     const options = { expiresIn: process.env.JWT_EXPIRES_IN };
@@ -99,7 +94,7 @@ export class AuthService {
   async setPassword(
     passwordResetToken: string,
     password: string,
-  ): Promise<User> {
+  ): Promise<Partial<User>> {
     const publicKey = process.env.JWT_PASS_PUBLIC;
 
     const decodedToken = this.decodeToken(passwordResetToken, publicKey);
