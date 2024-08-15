@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql';
-import { User } from '../types/graphql.schema';
+import { User } from '@modules/user/models/user.model';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { UserService } from '../../modules/user/user.service';

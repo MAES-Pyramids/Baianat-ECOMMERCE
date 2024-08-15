@@ -1,0 +1,201 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type SendOtpResponse {
+  success: Boolean!
+  message: String
+}
+
+type User {
+  id: Int!
+  role: String!
+  firstName: String!
+  lastName: String
+  email: String!
+  password: String!
+  isVerified: Boolean!
+  isSuspended: Boolean!
+}
+
+type AuthPayload {
+  user: User!
+  accessToken: String!
+}
+
+type PassResetResponse {
+  success: Boolean!
+  passwordResetToken: String
+}
+
+type SetPasswordResponse {
+  success: Boolean!
+  message: String
+}
+
+type Category {
+  id: Int!
+  name: String!
+  parentId: Int
+  parent: Category
+  children: [Category]
+  products: [Product]
+}
+
+type Translation {
+  id: Int!
+  locale: String!
+  title: String!
+  description: String!
+  product: Product!
+}
+
+type Product {
+  id: Int!
+  title: String!
+  description: String!
+  specifications: JSON
+  price: Float!
+  quantity: Int!
+  images: [String]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  category: Category!
+  translations: [Translation]
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Language {
+  id: Int!
+  code: String!
+  name: String!
+  isDefault: Boolean!
+}
+
+type Query {
+  users: [User!]!
+  user(id: Int!): User!
+  products: [Product!]!
+  product(id: Int!): Product!
+  getCategoryInfo(id: Int!): Category!
+  getProductsByCategoryId(id: Int!): [Product!]!
+  getTopCategories: [Category!]!
+  languages: [Language!]!
+  defaultLanguage: Language!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(id: Int!, updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+  verifyEmail(verifyEmailInput: VerifyEmailInput!): User!
+  sendOtp(sendOtpInput: SendOtpInput!): SendOtpResponse!
+  signup(signupInput: SignupInput!): AuthPayload!
+  login: AuthPayload!
+  generateResetPassJWT(passResetInput: PassResetInput!): PassResetResponse!
+  setPassword(setPasswordInput: SetPasswordInput!): SetPasswordResponse!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
+  removeProduct(id: Int!): Product!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  updateCategory(id: Int!, updateCategoryInput: UpdateCategoryInput!): Category!
+  createLanguage(data: CreateLanguageInput!): Language!
+  setDefaultLanguage(data: SetDefaultLanguageInput!): Language!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  role: String
+  firstName: String
+  lastName: String
+  email: String
+  password: String
+  isSuspended: Boolean
+}
+
+input VerifyEmailInput {
+  email: String!
+  otp: String!
+}
+
+input SendOtpInput {
+  otpType: String!
+  email: String!
+}
+
+input SignupInput {
+  email: String!
+  password: String!
+  firstName: String!
+  lastName: String
+}
+
+input PassResetInput {
+  email: String!
+  otp: String!
+}
+
+input SetPasswordInput {
+  passwordResetToken: String!
+  password: String!
+}
+
+input CreateProductInput {
+  title: String!
+  description: String!
+  specifications: JSON
+  price: Float!
+  quantity: Int!
+  images: [String!]
+  categoryId: Int!
+  translations: [CreateTranslationInput!]
+}
+
+input CreateTranslationInput {
+  locale: String!
+  title: String!
+  description: String!
+}
+
+input UpdateProductInput {
+  title: String
+  description: String
+  specifications: JSON
+  price: Float
+  quantity: Int
+  images: [String!]
+  categoryId: Int
+}
+
+input CreateCategoryInput {
+  name: String!
+  parentId: Int
+}
+
+input UpdateCategoryInput {
+  name: String!
+  parentId: Int
+}
+
+input CreateLanguageInput {
+  code: String!
+}
+
+input SetDefaultLanguageInput {
+  code: String!
+}

@@ -12,13 +12,16 @@ import { scrypt as _scrypt } from 'crypto';
 import { OtpService } from '../otp/otp.service';
 import { UserService } from '../user/user.service';
 import { OtpTypes } from '../../shared/enums/otps.enum';
-import { SignupInputDto } from './dtos/signup-input.dto';
-import {
-  User,
-  AuthPayload,
-  PassResetResponse,
-} from '../../shared/types/graphql.schema';
+import { SignupInput } from './dtos/inputs/signup-input';
+// import {
+//   User,
+//   AuthPayload,
+//   PassResetResponse,
+// } from '../../shared/types/graphql.schema';
 import { createAuthPayload } from '../../shared/utils/auth-payload.util';
+import { PassResetResponse } from './dtos/responses/pass-reset.response';
+import { User } from '../user/models/user.model';
+import { AuthPayload } from './dtos/responses/auth.response';
 
 const scrypt = promisify(_scrypt);
 
@@ -44,7 +47,7 @@ export class AuthService {
     else return null;
   }
 
-  async signup(signupInput: SignupInputDto): Promise<User> {
+  async signup(signupInput: SignupInput): Promise<User> {
     // Note: Email uniqueness is managed by the Prisma exception filter. Checking for email existence manually is unnecessary and avoids redundant database queries.
     const user = await this.userService.create(signupInput);
 

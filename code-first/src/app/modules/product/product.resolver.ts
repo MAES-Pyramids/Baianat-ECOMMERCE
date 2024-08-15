@@ -1,9 +1,9 @@
 import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { Product } from '../../shared/types/graphql.schema';
+import { Product } from './models/product.model';
 import { Roles } from '../../shared/decorators/roles.decorator';
-import { UpdateProductInputDto } from './dto/update-product.input';
-import { CreateProductInputDto } from './dto/create-product.input';
+import { UpdateProductInput } from './dto/inputs/update-product.input';
+import { CreateProductInput } from './dto/inputs/create-product.input';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
 import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
@@ -30,7 +30,7 @@ export class ProductResolver {
   @UseGuards(JwtAuthorizationGuard)
   @Roles('admin')
   createProduct(
-    @Args('createProductInput') createProductInput: CreateProductInputDto,
+    @Args('createProductInput') createProductInput: CreateProductInput,
   ): Promise<Product> {
     return this.productService.create(createProductInput);
   }
@@ -40,7 +40,7 @@ export class ProductResolver {
   @Roles('admin')
   updateProduct(
     @Args('id', { type: () => Int }) id: number,
-    @Args('updateProductInput') updateProductInput: UpdateProductInputDto,
+    @Args('updateProductInput') updateProductInput: UpdateProductInput,
   ): Promise<Product> {
     return this.productService.update(id, updateProductInput);
   }

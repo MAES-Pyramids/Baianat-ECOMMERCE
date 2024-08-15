@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
-import { Product } from '../../shared/types/graphql.schema';
+import { Product } from './models/product.model';
 import { DatabaseService } from '../database/database.service';
-import { CreateProductInputDto } from './dto/create-product.input';
+import { CreateProductInput } from './dto/inputs/create-product.input';
 import { LanguageContextProvider } from '../../shared/services/language-context.service';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class ProductService {
     return { ...productData, ...translation };
   }
 
-  async create(createProductInput: CreateProductInputDto): Promise<Product> {
+  async create(createProductInput: CreateProductInput): Promise<Product> {
     const { translations, ...productData } = createProductInput;
     return this.prismaService.product.create({
       data: { ...productData, translations: { create: translations } },

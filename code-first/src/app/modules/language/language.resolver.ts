@@ -1,10 +1,10 @@
 import { UseGuards } from '@nestjs/common';
 import { LanguageService } from './language.service';
-import { Language } from '../../shared/types/graphql.schema';
+import { Language } from './models/language.model';
 import { Roles } from '../../shared/decorators/roles.decorator';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { CreateLanguageInputDto } from './dtos/create-lang.input';
-import { SetDefaultLanguageInputDto } from './dtos/set-default-lang.input';
+import { CreateLanguageInput } from './dtos/inputs/create-lang.input';
+import { SetDefaultLanguageInput } from './dtos/inputs/set-default-lang.input';
 import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
 import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
 
@@ -27,13 +27,13 @@ export class LanguageResolver {
 
   @Mutation(() => Language)
   @Roles('admin')
-  createLanguage(@Args('data') data: CreateLanguageInputDto) {
+  createLanguage(@Args('data') data: CreateLanguageInput) {
     return this.languageService.createLanguage(data);
   }
 
   @Mutation(() => Language)
   @Roles('admin')
-  setDefaultLanguage(@Args('data') data: SetDefaultLanguageInputDto) {
+  setDefaultLanguage(@Args('data') data: SetDefaultLanguageInput) {
     return this.languageService.setDefaultLanguage(data);
   }
 }

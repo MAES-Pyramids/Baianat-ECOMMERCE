@@ -1,4 +1,4 @@
-import { User } from '../types/graphql.schema';
+import { User } from '@modules/user/models/user.model';
 
 export interface AuthPayload {
   id: number;

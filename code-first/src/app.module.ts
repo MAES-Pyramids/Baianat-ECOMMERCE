@@ -29,11 +29,7 @@ import { LanguageService } from './app/modules/language/language.service';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       debug: true,
       driver: ApolloDriver,
-      typePaths: ['./**/*.graphql'],
-      definitions: {
-        path: join(process.cwd(), 'src/app/shared/types/graphql.schema.ts'),
-        outputAs: 'class',
-      },
+      autoSchemaFile: join(process.cwd(), 'src/app/graphql/schema/schema.gql'),
       resolvers: { JSON: new JsonScalar() },
     }),
     EventEmitterModule.forRoot(),

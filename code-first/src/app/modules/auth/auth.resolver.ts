@@ -1,25 +1,21 @@
-import {
-  User,
-  AuthPayload,
-  PassResetResponse,
-  SetPasswordResponse,
-} from '../../shared/types/graphql.schema';
 import { UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignupInputDto } from './dtos/signup-input.dto';
-import { PassResetInputDto } from './dtos/reset-pass.input';
-import { SetPasswordInputDto } from './dtos/set-pass.input';
+import { SignupInput } from './dtos/inputs/signup-input';
+import { PassResetInput } from './dtos/inputs/reset-pass.input';
+import { SetPasswordInput } from './dtos/inputs/set-pass.input';
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { GraphQLAuthGuard } from '../../shared/guards/graphql-authen.guard';
+import { User } from '../user/models/user.model';
+import { AuthPayload } from './dtos/responses/auth.response';
+import { PassResetResponse } from './dtos/responses/pass-reset.response';
+import { SetPasswordResponse } from './dtos/responses/set-password.response';
 
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
   @Mutation(() => AuthPayload)
-  async signup(
-    @Args('signupInput') signupInput: SignupInputDto,
-  ): Promise<User> {
+  async signup(@Args('signupInput') signupInput: SignupInput): Promise<User> {
     return this.authService.signup(signupInput);
   }
 
@@ -31,7 +27,7 @@ export class AuthResolver {
 
   @Mutation(() => PassResetResponse)
   async generateResetPassJWT(
-    @Args('passResetInput') { email, otp }: PassResetInputDto,
+    @Args('passResetInput') { email, otp }: PassResetInput,
   ): Promise<PassResetResponse> {
     return this.authService.generateResetPassJWT(email, otp);
   }
@@ -39,7 +35,7 @@ export class AuthResolver {
   @Mutation(() => SetPasswordResponse)
   async setPassword(
     @Args('setPasswordInput')
-    { passwordResetToken, password }: SetPasswordInputDto,
+    { passwordResetToken, password }: SetPasswordInput,
   ): Promise<SetPasswordResponse> {
     await this.authService.setPassword(passwordResetToken, password);
     return { success: true, message: 'Password set successfully' };

@@ -1,12 +1,14 @@
 import { UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { SendOtpInputDto } from './dtos/send-otp.dto';
-import { UpdateUserInputDto } from './dtos/update-user.input';
-import { CreateUserInputDto } from './dtos/create-user.input';
+import { SendOtpInput } from '../otp/dtos/inputs/send-otp.input';
+import { UpdateUserInput } from './dtos/inputs/update-user.input';
+import { CreateUserInput } from './dtos/inputs/create-user.input';
 import { Roles } from '../../shared/decorators/roles.decorator';
-import { VerifyEmailInputDto } from './dtos/verify-email.input';
+import { VerifyEmailInput } from './dtos/inputs/verify-email.input';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { SendOtpResponse, User } from '../../shared/types/graphql.schema';
+import { SendOtpResponse } from '@modules/otp/dtos/responses/send-otp.response';
+import { User } from '@modules/user/models/user.model';
+
 import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
 import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
 
@@ -32,7 +34,7 @@ export class UserResolver {
   @Roles('admin')
   @Mutation(() => User)
   async createUser(
-    @Args('createUserInput') createUserInput: CreateUserInputDto,
+    @Args('createUserInput') createUserInput: CreateUserInput,
   ): Promise<User> {
     return this.userService.create(createUserInput);
   }
@@ -42,7 +44,7 @@ export class UserResolver {
   @Mutation(() => User)
   async updateUser(
     @Args('id', { type: () => Int }) id: number,
-    @Args('updateUserInput') updateUserInput: UpdateUserInputDto,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ): Promise<User> {
     return this.userService.update(id, updateUserInput);
   }
@@ -56,14 +58,14 @@ export class UserResolver {
 
   @Mutation(() => User)
   async verifyEmail(
-    @Args('verifyEmailInput') { email, otp }: VerifyEmailInputDto,
+    @Args('verifyEmailInput') { email, otp }: VerifyEmailInput,
   ): Promise<User> {
     return this.userService.verifyEmail(email, otp);
   }
 
   @Mutation(() => SendOtpResponse)
   async sendOtp(
-    @Args('sendOtpInput') { email, otpType }: SendOtpInputDto,
+    @Args('sendOtpInput') { email, otpType }: SendOtpInput,
   ): Promise<SendOtpResponse> {
     await this.userService.sendOtp(email, otpType);
     return { success: true, message: 'OTP sent' };

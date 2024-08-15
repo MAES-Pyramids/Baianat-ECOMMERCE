@@ -1,10 +1,14 @@
+import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, IsString, MinLength } from 'class-validator';
 
-export class VerifyEmailInputDto {
+@InputType()
+export class PassResetInput {
   @IsEmail()
+  @Field()
   email: string;
 
   @IsString()
   @MinLength(6)
+  @Field()
   otp: string;
 }

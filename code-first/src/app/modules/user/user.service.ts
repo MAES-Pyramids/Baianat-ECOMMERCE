@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { OtpService } from '../otp/otp.service';
 import { OtpTypes } from '../../shared/enums/otps.enum';
-import { User } from '../../shared/types/graphql.schema';
+import { User } from './models/user.model';
 import { DatabaseService } from '../database/database.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 

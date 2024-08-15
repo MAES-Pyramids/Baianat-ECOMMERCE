@@ -1,9 +1,10 @@
 import { UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Roles } from '../../shared/decorators/roles.decorator';
-import { Category, Product } from '../../shared/types/graphql.schema';
-import { CreateCategoryInputDto } from './dtos/create-category.input';
-import { UpdateCategoryInputDto } from './dtos/update-category.input';
+import { Category } from './models/category.model';
+import { Product } from '../product/models/product.model';
+import { CreateCategoryInput } from './dtos/inputs/create-category.input';
+import { UpdateCategoryInput } from './dtos/inputs/update-category.input';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
 import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
@@ -17,7 +18,7 @@ export class CategoryResolver {
   @UseGuards(JwtAuthorizationGuard)
   @Roles('admin')
   async createCategory(
-    @Args('createCategoryInput') { name, parentId }: CreateCategoryInputDto,
+    @Args('createCategoryInput') { name, parentId }: CreateCategoryInput,
   ) {
     if (!parentId) parentId = null;
     return this.categoryService.createCategory({ name, parentId });
@@ -28,7 +29,7 @@ export class CategoryResolver {
   @Roles('admin')
   async updateCategory(
     @Args('id', { type: () => Int }) id: number,
-    @Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInputDto,
+    @Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInput,
   ) {
     return this.categoryService.updateCategory(id, updateCategoryInput);
   }
