@@ -100,7 +100,7 @@ type Mutation {
   verifyEmail(verifyEmailInput: VerifyEmailInput!): User!
   sendOtp(sendOtpInput: SendOtpInput!): SendOtpResponse!
   signup(signupInput: SignupInput!): AuthPayload!
-  login: AuthPayload!
+  login(loginInput: LoginInput!): AuthPayload!
   generateResetPassJWT(passResetInput: PassResetInput!): PassResetResponse!
   setPassword(setPasswordInput: SetPasswordInput!): SetPasswordResponse!
   createProduct(createProductInput: CreateProductInput!): Product!
@@ -143,6 +143,11 @@ input SignupInput {
   password: String!
   firstName: String!
   lastName: String
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }
 
 input PassResetInput {

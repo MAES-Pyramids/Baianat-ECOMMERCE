@@ -9,6 +9,7 @@ import { User } from '../user/models/user.model';
 import { AuthPayload } from './dtos/responses/auth.response';
 import { PassResetResponse } from './dtos/responses/pass-reset.response';
 import { SetPasswordResponse } from './dtos/responses/set-password.response';
+import { LoginInput } from './dtos/inputs/login-input';
 
 @Resolver()
 export class AuthResolver {
@@ -21,7 +22,10 @@ export class AuthResolver {
 
   @Mutation(() => AuthPayload)
   @UseGuards(GraphQLAuthGuard)
-  async login(@Context() context): Promise<AuthPayload> {
+  async login(
+    @Context() context,
+    @Args('loginInput') loginInput: LoginInput,
+  ): Promise<AuthPayload> {
     return this.authService.login(context.user);
   }
 
