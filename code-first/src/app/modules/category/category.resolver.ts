@@ -1,5 +1,13 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Mutation, Query, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Query,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { Category } from './models/category.model';
 import { CategoryService } from './category.service';
 import { Product } from '../product/models/product.model';
@@ -20,10 +28,14 @@ export class CategoryResolver {
   async createCategory(
     @Args('createCategoryInput') createCategoryInput: CreateCategoryInput,
   ): Promise<Category> {
-    const { name, parentId } = createCategoryInput;
+    const parentId =
+      createCategoryInput.parentId && createCategoryInput.parentId !== 0
+        ? createCategoryInput.parentId
+        : null;
+
     return this.categoryService.createCategory({
-      name,
-      parentId: parentId ?? null,
+      ...createCategoryInput,
+      parentId,
     });
   }
 
@@ -54,5 +66,22 @@ export class CategoryResolver {
   @Query(() => [Category])
   async getTopCategories(): Promise<Category[]> {
     return this.categoryService.getTopCategories();
+  }
+
+  @ResolveField(() => [Category])
+  async children(@Parent() category: Category): Promise<Category[]> {
+    return this.categoryService.getCategoryChildren(category.id);
+  }
+
+  @ResolveField(() => Category, { nullable: true })
+  async parent(@Parent() category: Category): Promise<Category | null> {
+    return category.parentId
+      ? this.categoryService.getCategoryInfo(category.parentId)
+      : null;
+  }
+
+  @ResolveField(() => [Product])
+  async products(@Parent() category: Category): Promise<Product[]> {
+    return this.categoryService.getProductsByCategoryId(category.id);
   }
 }

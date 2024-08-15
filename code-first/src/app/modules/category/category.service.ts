@@ -10,6 +10,7 @@ export class CategoryService {
   constructor(private readonly prismaService: DatabaseService) {}
 
   async createCategory(data: CreateCategoryInput): Promise<Category> {
+    console.log(data.parentId);
     return await this.prismaService.category.create({
       data: {
         name: data.name,
@@ -28,14 +29,18 @@ export class CategoryService {
   async getTopCategories(): Promise<Category[]> {
     return this.prismaService.category.findMany({
       where: { parentId: null },
-      include: { children: true },
     });
   }
 
   async getCategoryInfo(id: number): Promise<Category> {
     return this.prismaService.category.findUnique({
       where: { id },
-      include: { children: true, parent: true },
+    });
+  }
+
+  async getCategoryChildren(id: number): Promise<Category[]> {
+    return this.prismaService.category.findMany({
+      where: { parentId: id },
     });
   }
 
