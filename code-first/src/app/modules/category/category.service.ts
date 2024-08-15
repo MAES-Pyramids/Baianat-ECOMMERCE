@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { Category } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
-import { Product } from '../product/models/product.model';
+import { Product } from '@prisma/client';
 import { DatabaseService } from '../database/database.service';
 import { CreateCategoryInput } from './dtos/inputs/create-category.input';
 
@@ -10,12 +10,9 @@ export class CategoryService {
   constructor(private readonly prismaService: DatabaseService) {}
 
   async createCategory(data: CreateCategoryInput): Promise<Category> {
-    console.log(data.parentId);
+    const { parentId, name } = data;
     return await this.prismaService.category.create({
-      data: {
-        name: data.name,
-        parentId: data.parentId,
-      },
+      data: { name, parentId },
     });
   }
 
@@ -44,10 +41,9 @@ export class CategoryService {
     });
   }
 
-  async getProductsByCategoryId(categoryId: number): Promise<Product[]> {
-    return this.prismaService.product.findMany({
-      where: { categoryId },
-      include: { category: true },
-    });
+  async getProductsByCategoryId(
+    categoryId: number,
+  ): Promise<Partial<Product[]>> {
+    return this.prismaService.product.findMany({ where: { categoryId } });
   }
 }

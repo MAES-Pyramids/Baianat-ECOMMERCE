@@ -9,6 +9,7 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { Category } from './models/category.model';
+import { Category as prismaCategory } from '@prisma/client';
 import { CategoryService } from './category.service';
 import { Product } from '../product/models/product.model';
 import { Roles } from '../../shared/decorators/roles.decorator';
@@ -22,12 +23,27 @@ import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
 export class CategoryResolver {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @Query(() => Category)
+  async getCategoryInfo(@Args('id', { type: () => Int }) id: number) {
+    return this.categoryService.getCategoryInfo(id);
+  }
+
+  @Query(() => [Product])
+  async getProductsByCategoryId(@Args('id', { type: () => Int }) id: number) {
+    return this.categoryService.getProductsByCategoryId(id);
+  }
+
+  @Query(() => [Category])
+  async getTopCategories(): Promise<Category[]> {
+    return this.categoryService.getTopCategories();
+  }
+
   @Mutation(() => Category)
   @UseGuards(JwtAuthorizationGuard)
   @Roles('admin')
   async createCategory(
     @Args('createCategoryInput') createCategoryInput: CreateCategoryInput,
-  ): Promise<Category> {
+  ) {
     const parentId =
       createCategoryInput.parentId && createCategoryInput.parentId !== 0
         ? createCategoryInput.parentId
@@ -45,43 +61,24 @@ export class CategoryResolver {
   async updateCategory(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInput,
-  ): Promise<Category> {
+  ) {
     return this.categoryService.updateCategory(id, updateCategoryInput);
   }
 
-  @Query(() => Category)
-  async getCategoryInfo(
-    @Args('id', { type: () => Int }) id: number,
-  ): Promise<Category> {
-    return this.categoryService.getCategoryInfo(id);
-  }
-
-  @Query(() => [Product])
-  async getProductsByCategoryId(
-    @Args('id', { type: () => Int }) id: number,
-  ): Promise<Product[]> {
-    return this.categoryService.getProductsByCategoryId(id);
-  }
-
-  @Query(() => [Category])
-  async getTopCategories(): Promise<Category[]> {
-    return this.categoryService.getTopCategories();
-  }
-
   @ResolveField(() => [Category])
-  async children(@Parent() category: Category): Promise<Category[]> {
+  async children(@Parent() category: prismaCategory) {
     return this.categoryService.getCategoryChildren(category.id);
   }
 
   @ResolveField(() => Category, { nullable: true })
-  async parent(@Parent() category: Category): Promise<Category | null> {
+  async parent(@Parent() category: prismaCategory) {
     return category.parentId
       ? this.categoryService.getCategoryInfo(category.parentId)
       : null;
   }
 
   @ResolveField(() => [Product])
-  async products(@Parent() category: Category): Promise<Product[]> {
+  async products(@Parent() category: prismaCategory) {
     return this.categoryService.getProductsByCategoryId(category.id);
   }
 }

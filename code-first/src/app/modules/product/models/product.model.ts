@@ -1,6 +1,6 @@
 import { Field, ObjectType, Int, Float } from '@nestjs/graphql';
 import { Category } from '../../category/models/category.model';
-import { Translation } from '../../language/models/translation.model';
+import { Translation } from './translation.model';
 import { GraphQLJSON } from 'graphql-type-json';
 
 @ObjectType()

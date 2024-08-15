@@ -1,9 +1,11 @@
 import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
-import { Product } from './models/product.model';
+// import { Product } from './models/product.model';
+import { Product } from '@prisma/client';
 import { DatabaseService } from '../database/database.service';
 import { CreateProductInput } from './dto/inputs/create-product.input';
 import { LanguageContextProvider } from '../../shared/services/language-context.service';
+import { Category } from '../category/models/category.model';
 
 @Injectable()
 export class ProductService {
@@ -15,7 +17,7 @@ export class ProductService {
   async findAll(): Promise<Product[]> {
     const locale = this.languageContextProvider.getLanguage();
     const products = await this.prismaService.product.findMany({
-      include: { category: true, translations: { where: { locale } } },
+      include: { translations: { where: { locale } } },
     });
     return products.map((product) => {
       const { translations, ...productData } = product;
@@ -28,7 +30,7 @@ export class ProductService {
     const locale = this.languageContextProvider.getLanguage();
     const product = await this.prismaService.product.findUnique({
       where,
-      include: { category: true, translations: { where: { locale } } },
+      include: { translations: { where: { locale } } },
     });
     const { translations, ...productData } = product;
     const translation = translations[0] || {};
@@ -59,5 +61,9 @@ export class ProductService {
       where: { id },
       include: { category: true },
     });
+  }
+
+  async getCategoryById(id: number): Promise<Category> {
+    return this.prismaService.category.findUnique({ where: { id } });
   }
 }

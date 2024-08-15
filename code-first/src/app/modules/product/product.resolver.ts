@@ -1,13 +1,23 @@
 import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './models/product.model';
+import { Product as prismaProduct } from '@prisma/client';
 import { Roles } from '../../shared/decorators/roles.decorator';
 import { UpdateProductInput } from './dto/inputs/update-product.input';
 import { CreateProductInput } from './dto/inputs/create-product.input';
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
 import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
 import { LangInterceptor } from '../../shared/interceptors/lang.interceptor';
+import { Category } from '../category/models/category.model';
 
 @Resolver(() => Product)
 @UseGuards(JwtAuthenticationGuard)
@@ -16,13 +26,13 @@ export class ProductResolver {
 
   @Query(() => [Product])
   @UseInterceptors(LangInterceptor)
-  products(): Promise<Product[]> {
+  products() {
     return this.productService.findAll();
   }
 
   @Query(() => Product)
   @UseInterceptors(LangInterceptor)
-  product(@Args('id', { type: () => Int }) id: number): Promise<Product> {
+  product(@Args('id', { type: () => Int }) id: number) {
     return this.productService.findOne({ id });
   }
 
@@ -31,7 +41,7 @@ export class ProductResolver {
   @Roles('admin')
   createProduct(
     @Args('createProductInput') createProductInput: CreateProductInput,
-  ): Promise<Product> {
+  ) {
     return this.productService.create(createProductInput);
   }
 
@@ -41,7 +51,7 @@ export class ProductResolver {
   updateProduct(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateProductInput') updateProductInput: UpdateProductInput,
-  ): Promise<Product> {
+  ) {
     return this.productService.update(id, updateProductInput);
   }
 
@@ -50,5 +60,10 @@ export class ProductResolver {
   @Roles('admin')
   removeProduct(@Args('id', { type: () => Int }) id: number) {
     return this.productService.remove(id);
+  }
+
+  @ResolveField(() => [Category])
+  async category(@Parent() product: prismaProduct) {
+    return this.productService.getCategoryById(product.categoryId);
   }
 }
