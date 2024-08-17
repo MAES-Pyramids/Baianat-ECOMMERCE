@@ -7,6 +7,7 @@ import {
   Int,
   ResolveField,
   Parent,
+  Context,
 } from '@nestjs/graphql';
 import { Category } from './models/category.model';
 import { Category as prismaCategory } from '@prisma/client';
@@ -17,6 +18,7 @@ import { CreateCategoryInput } from './dtos/inputs/create-category.input';
 import { UpdateCategoryInput } from './dtos/inputs/update-category.input';
 import { JwtAuthorizationGuard } from '../../shared/guards/jwt-author.guard';
 import { JwtAuthenticationGuard } from '../../shared/guards/jwt-authen.guard';
+import { IDataloaders } from '../dataloader/dataloader.interface';
 
 @Resolver(() => Category)
 @UseGuards(JwtAuthenticationGuard)
@@ -78,7 +80,10 @@ export class CategoryResolver {
   }
 
   @ResolveField(() => [Product])
-  async products(@Parent() category: prismaCategory) {
-    return this.categoryService.getProductsByCategoryId(category.id);
+  async products(
+    @Parent() category: prismaCategory,
+    @Context() { loaders }: { loaders: IDataloaders },
+  ) {
+    return loaders.productsLoader.load(category.id);
   }
 }

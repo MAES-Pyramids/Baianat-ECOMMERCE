@@ -15,6 +15,8 @@ import { CategoryModule } from './app/modules/category/category.module';
 import { DatabaseModule } from './app/modules/database/database.module';
 import { LanguageModule } from './app/modules/language/language.module';
 import { LanguageService } from './app/modules/language/language.service';
+import { DataloaderModule } from './app/modules/dataloader/dataloader.module';
+import { DataloaderService } from './app/modules/dataloader/dataloader.service';
 
 @Module({
   imports: [
@@ -26,12 +28,6 @@ import { LanguageService } from './app/modules/language/language.service';
       expandVariables: true,
       envFilePath: [`etc/secrets/.env.${process.env.NODE_ENV}`, 'prisma/.env'],
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      debug: true,
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/app/graphql/schema/schema.gql'),
-      resolvers: { JSON: new JsonScalar() },
-    }),
     EventEmitterModule.forRoot(),
     DatabaseModule,
     MailerModule,
@@ -39,11 +35,26 @@ import { LanguageService } from './app/modules/language/language.service';
     AuthModule,
     OtpModule,
     ProductModule,
+    DataloaderModule,
     CategoryModule,
     LanguageModule,
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      imports: [DataloaderModule],
+      driver: ApolloDriver,
+      useFactory: (dataloaderService: DataloaderService) => {
+        return {
+          autoSchemaFile: join(
+            process.cwd(),
+            'src/app/graphql/schema/schema.gql',
+          ),
+          context: () => ({ loaders: dataloaderService.getLoaders() }),
+          resolvers: { JSON: new JsonScalar() },
+          debug: true,
+        };
+      },
+      inject: [DataloaderService],
+    }),
   ],
-  providers: [],
-  controllers: [],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly languageService: LanguageService) {}
