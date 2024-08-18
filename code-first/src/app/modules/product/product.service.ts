@@ -1,4 +1,4 @@
-import { groupBy, map } from 'ramda';
+import { groupBy, map, dissoc } from 'ramda';
 import { Prisma } from '@prisma/client';
 import { Product } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
@@ -9,27 +9,27 @@ import { CreateProductInput } from './dto/inputs/create-product.input';
 export class ProductService {
   constructor(private readonly prismaService: DatabaseService) {}
 
-  async findAll(): Promise<Product[]> {
-    const locale = 'en';
+  async findAll(locale: string): Promise<Product[]> {
     const products = await this.prismaService.product.findMany({
       include: { translations: { where: { locale } } },
     });
     return products.map((product) => {
       const { translations, ...productData } = product;
-      const translation = translations[0] || {};
+      const translation = dissoc('id', translations[0]) || {};
       return { ...productData, ...translation };
     });
   }
 
-  async findOne(where: Prisma.ProductWhereUniqueInput): Promise<Product> {
-    // const locale = this.languageContextProvider.getLanguage();
-    const locale = 'en';
+  async findOne(
+    where: Prisma.ProductWhereUniqueInput,
+    locale: string,
+  ): Promise<Product> {
     const product = await this.prismaService.product.findUnique({
       where,
       include: { translations: { where: { locale } } },
     });
     const { translations, ...productData } = product;
-    const translation = translations[0] || {};
+    const translation = dissoc('id', translations[0]) || {};
     return { ...productData, ...translation };
   }
 

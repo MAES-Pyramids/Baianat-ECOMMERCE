@@ -28,14 +28,19 @@ export class ProductResolver {
 
   @Query(() => [Product])
   @UseInterceptors(LangInterceptor)
-  products() {
-    return this.productService.findAll();
+  products(@Context('req') req: { headers: { 'x-lang': string } }) {
+    const locale = req.headers['x-lang'];
+    return this.productService.findAll(locale);
   }
 
   @Query(() => Product)
   @UseInterceptors(LangInterceptor)
-  product(@Args('id', { type: () => Int }) id: number) {
-    return this.productService.findOne({ id });
+  product(
+    @Args('id', { type: () => Int }) id: number,
+    @Context('req') req: { headers: { 'x-lang': string } },
+  ) {
+    const locale = req.headers['x-lang'];
+    return this.productService.findOne({ id }, locale);
   }
 
   @Mutation(() => Product)
