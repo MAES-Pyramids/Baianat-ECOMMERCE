@@ -17,6 +17,8 @@ import { LanguageModule } from './app/modules/language/language.module';
 import { LanguageService } from './app/modules/language/language.service';
 import { DataloaderModule } from './app/modules/dataloader/dataloader.module';
 import { DataloaderService } from './app/modules/dataloader/dataloader.service';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const depthLimit = require('graphql-depth-limit');
 
 @Module({
   imports: [
@@ -50,6 +52,7 @@ import { DataloaderService } from './app/modules/dataloader/dataloader.service';
           context: () => ({ loaders: dataloaderService.getLoaders() }),
           resolvers: { JSON: new JsonScalar() },
           debug: true,
+          validationRules: [depthLimit(6)],
         };
       },
       inject: [DataloaderService],
