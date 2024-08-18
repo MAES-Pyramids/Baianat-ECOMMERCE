@@ -1,3 +1,4 @@
+import { map } from 'ramda';
 import { Prisma } from '@prisma/client';
 import { Category } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
@@ -46,4 +47,43 @@ export class CategoryService {
   ): Promise<Partial<Product[]>> {
     return this.prismaService.product.findMany({ where: { categoryId } });
   }
+
+  // Note: I opted for the product-centric approach for querying categories
+  // instead of delegating to CategoryService. Querying categories by product
+  // IDs directly simplifies the process, as the alternative would require
+  // additional iteration due to one category potentially containing more than
+  // one of the required id.
+  async getProductCategoriesByBatch(productIds: number[]) {
+    const productsWithCategories = await this.prismaService.product.findMany({
+      where: { id: { in: productIds } },
+      include: { category: true },
+    });
+
+    const categoryMap = productsWithCategories.reduce<
+      Record<number, Category | null>
+    >((acc, product) => {
+      acc[product.id] = product.category || null;
+      return acc;
+    }, {});
+
+    return map((productId) => categoryMap[productId], productIds);
+  }
+  // async getProductCategoriesByBatch(productIds: number[]) {
+  //   const categoriesByProduct = await this.prismaService.category.findMany({
+  //     where: { products: { some: { id: { in: productIds } } } },
+  //     include: { products: true },
+  //   });
+
+  //   const groupedCategories = productIds.reduce<
+  //     Record<number, Category | null>
+  //   >((acc, productId) => {
+  //     const category = categoriesByProduct.find((category) =>
+  //       category.products.some((product) => product.id === productId),
+  //     );
+  //     acc[productId] = category || null;
+  //     return acc;
+  //   }, {});
+
+  //   return map((productId) => groupedCategories[productId], productIds);
+  // }
 }

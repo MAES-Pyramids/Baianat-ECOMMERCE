@@ -2,7 +2,6 @@ import { groupBy, map } from 'ramda';
 import { Prisma } from '@prisma/client';
 import { Product } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
-import { Category } from '../category/models/category.model';
 import { DatabaseService } from '../database/database.service';
 import { CreateProductInput } from './dto/inputs/create-product.input';
 
@@ -38,7 +37,6 @@ export class ProductService {
     const { translations, ...productData } = createProductInput;
     return this.prismaService.product.create({
       data: { ...productData, translations: { create: translations } },
-      include: { category: true },
     });
   }
 
@@ -58,10 +56,6 @@ export class ProductService {
       where: { id },
       include: { category: true },
     });
-  }
-
-  async getCategoryById(id: number): Promise<Category> {
-    return this.prismaService.category.findUnique({ where: { id } });
   }
 
   async getCategoryProductsByBatch(categoryIds: number[]) {
