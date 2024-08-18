@@ -1,12 +1,13 @@
 import { join } from 'path';
 import Configs from '@shared/config';
-import { ConfigModule } from '@nestjs/config';
+import { BullModule } from '@nestjs/bull';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Module, OnModuleInit } from '@nestjs/common';
 import { OtpModule } from './app/modules/otp/otp.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { UserModule } from './app/modules/user/user.module';
 import { AuthModule } from './app/modules/auth/auth.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JsonScalar } from './app/graphql/scalars/json.scalar';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MailerModule } from './app/modules/mailer/mailer.module';
@@ -56,6 +57,16 @@ const depthLimit = require('graphql-depth-limit');
         };
       },
       inject: [DataloaderService],
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.get<string>('redis.host'),
+          port: configService.get<number>('redis.port'),
+        },
+      }),
+      inject: [ConfigService],
     }),
   ],
 })

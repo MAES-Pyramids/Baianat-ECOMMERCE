@@ -3,6 +3,9 @@ import { OtpTypes } from '@shared/enums/otps.enum';
 import { DatabaseService } from '../database/database.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { InjectQueue } from '@nestjs/bull';
+import { MAILER_QUEUE } from '../../shared/constants/bull-queues.constants';
+import { Queue } from 'bull';
 
 const INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -11,6 +14,7 @@ export class OtpService {
   constructor(
     private eventEmitter: EventEmitter2,
     private readonly prismaService: DatabaseService,
+    @InjectQueue(MAILER_QUEUE) private readonly mailerQueue: Queue,
   ) {}
 
   async createOtp(userId: number, otpType: OtpTypes): Promise<string> {
@@ -58,14 +62,10 @@ export class OtpService {
   async createAndSendOtp(
     userId: number,
     email: string,
-    otpType: OtpTypes,
+    mailType: OtpTypes,
   ): Promise<void> {
-    const otp = await this.createOtp(userId, otpType);
-
-    this.eventEmitter.emit('otp.sent', {
-      email,
-      otp,
-      mailType: otpType,
-    });
+    const otp = await this.createOtp(userId, mailType);
+    await this.mailerQueue.add('send-otp', { email, otp, mailType });
+    // this.eventEmitter.emit('otp.sent', { email, otp, mailType });
   }
 }

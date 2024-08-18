@@ -1,7 +1,6 @@
 import * as nodemailer from 'nodemailer';
 import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
-import { mailTypes } from '../../shared/enums/mails.enum';
+import { SendEmailParams } from './interfaces/email-params.interface';
 
 @Injectable()
 export class MailerService {
@@ -29,16 +28,8 @@ export class MailerService {
     },
   };
 
-  @OnEvent('otp.sent')
-  async sendEmail({
-    email,
-    otp,
-    mailType,
-  }: {
-    email: string;
-    otp: string;
-    mailType: mailTypes;
-  }): Promise<void> {
+  // @OnEvent('otp.sent')
+  async sendEmail({ email, otp, mailType }: SendEmailParams): Promise<void> {
     const format = this.mailFormats[mailType];
     if (!format) throw new Error('Invalid mail type');
 
