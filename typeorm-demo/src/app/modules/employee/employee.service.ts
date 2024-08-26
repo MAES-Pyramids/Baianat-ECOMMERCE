@@ -1,9 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmployeeInput } from './dto/create-employee.input';
 import { UpdateEmployeeInput } from './dto/update-employee.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Employee } from './entities/employee.entity';
+import { Repository } from 'typeorm';
+import { ContactInfo } from './entities/contact_info.entity';
 
 @Injectable()
 export class EmployeeService {
+  constructor(
+    @InjectRepository(Employee)
+    private employeeRepository: Repository<Employee>,
+
+    @InjectRepository(ContactInfo)
+    private contactInfoRepository: Repository<ContactInfo>,
+  ) {}
+
   create(createEmployeeInput: CreateEmployeeInput) {
     return 'This action adds a new employee';
   }
