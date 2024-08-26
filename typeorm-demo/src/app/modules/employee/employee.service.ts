@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateEmployeeInput } from './dto/create-employee.input';
 import { UpdateEmployeeInput } from './dto/update-employee.input';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Employee } from './entities/employee.entity';
+import { Employee } from './employee.entity';
 import { Repository } from 'typeorm';
-import { ContactInfo } from './entities/contact_info.entity';
+import { ContactInfo } from './contact_info.entity';
 
 @Injectable()
 export class EmployeeService {

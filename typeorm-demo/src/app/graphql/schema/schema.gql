@@ -39,6 +39,7 @@ type Employee {
   manager: Employee
   subordinates: [Employee!]!
   meetings: [Meeting!]!
+  isActive: Boolean!
 }
 
 type Query {

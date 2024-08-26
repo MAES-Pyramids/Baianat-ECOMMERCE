@@ -6,22 +6,13 @@ import { join } from 'path';
 import { EmployeeModule } from './app/modules/employee/employee.module';
 import { TaskModule } from './app/modules/task/task.module';
 import { MeetingModule } from './app/modules/meeting/meeting.module';
+import { dataSourceOptions } from '../db/data-source';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const depthLimit = require('graphql-depth-limit');
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5434,
-      username: 'postgres',
-      password: '123',
-      database: 'BaianatDB',
-      entities: ['dist/**/*.entity.js'],
-      synchronize: true,
-      logging: true,
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       useFactory: () => {

@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { MeetingService } from './meeting.service';
-import { Meeting } from './entities/meeting.entity';
+import { Meeting } from './meeting.entity';
 import { CreateMeetingInput } from './dto/create-meeting.input';
 import { UpdateMeetingInput } from './dto/update-meeting.input';
 
@@ -9,7 +9,9 @@ export class MeetingResolver {
   constructor(private readonly meetingService: MeetingService) {}
 
   @Mutation(() => Meeting)
-  createMeeting(@Args('createMeetingInput') createMeetingInput: CreateMeetingInput) {
+  createMeeting(
+    @Args('createMeetingInput') createMeetingInput: CreateMeetingInput,
+  ) {
     return this.meetingService.create(createMeetingInput);
   }
 
@@ -24,8 +26,13 @@ export class MeetingResolver {
   }
 
   @Mutation(() => Meeting)
-  updateMeeting(@Args('updateMeetingInput') updateMeetingInput: UpdateMeetingInput) {
-    return this.meetingService.update(updateMeetingInput.id, updateMeetingInput);
+  updateMeeting(
+    @Args('updateMeetingInput') updateMeetingInput: UpdateMeetingInput,
+  ) {
+    return this.meetingService.update(
+      updateMeetingInput.id,
+      updateMeetingInput,
+    );
   }
 
   @Mutation(() => Meeting)

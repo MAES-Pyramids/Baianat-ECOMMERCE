@@ -1,8 +1,9 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Employee } from '@modules/employee/entities/employee.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Employee } from '@modules/employee/employee.entity';
 
 @ObjectType()
+@Entity()
 export class Task {
   @PrimaryGeneratedColumn()
   @Field(() => Int)

@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   Column,
+  Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -9,10 +10,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ContactInfo } from './contact_info.entity';
-import { Task } from '@modules/task/entities/task.entity';
-import { Meeting } from '@modules/meeting/entities/meeting.entity';
+import { Task } from '@modules/task/task.entity';
+import { Meeting } from '@modules/meeting/meeting.entity';
 
 @ObjectType()
+@Entity()
 export class Employee {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
@@ -53,4 +55,8 @@ export class Employee {
   @JoinTable()
   @Field(() => [Meeting])
   meetings: Meeting[];
+
+  @Column()
+  @Field()
+  isActive: boolean;
 }

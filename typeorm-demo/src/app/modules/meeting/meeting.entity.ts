@@ -1,8 +1,9 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Employee } from '@modules/employee/entities/employee.entity';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Employee } from '@modules/employee/employee.entity';
 
 @ObjectType()
+@Entity()
 export class Meeting {
   @PrimaryGeneratedColumn()
   @Field(() => Int)

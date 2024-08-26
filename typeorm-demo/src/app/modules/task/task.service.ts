@@ -3,7 +3,7 @@ import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Task } from './entities/task.entity';
+import { Task } from './task.entity';
 
 @Injectable()
 export class TaskService {
@@ -13,6 +13,7 @@ export class TaskService {
   ) {}
 
   create(createTaskInput: CreateTaskInput) {
+    // this.taskRepository.find({ where: { employeeId: '' } });
     return 'This action adds a new task';
   }
 
