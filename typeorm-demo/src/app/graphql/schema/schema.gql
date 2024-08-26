@@ -1,0 +1,93 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ContactInfo {
+  id: Int!
+  email: String!
+  phone: String!
+  employee: Employee!
+}
+
+type Task {
+  id: Int!
+  name: String!
+  employee: Employee
+}
+
+type Meeting {
+  id: Int!
+  date: DateTime!
+  description: String!
+  isCancelled: Boolean!
+  zoomUrl: String!
+  attendees: [Employee!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Employee {
+  id: Int!
+  name: String!
+  age: Int!
+  address: String!
+  contactInfo: ContactInfo!
+  tasks: [Task!]!
+  manager: Employee
+  subordinates: [Employee!]!
+  meetings: [Meeting!]!
+}
+
+type Query {
+  employee(id: Int!): Employee!
+  task(id: Int!): Task!
+  meeting(id: Int!): Meeting!
+}
+
+type Mutation {
+  createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
+  updateEmployee(updateEmployeeInput: UpdateEmployeeInput!): Employee!
+  removeEmployee(id: Int!): Employee!
+  createTask(createTaskInput: CreateTaskInput!): Task!
+  updateTask(updateTaskInput: UpdateTaskInput!): Task!
+  removeTask(id: Int!): Task!
+  createMeeting(createMeetingInput: CreateMeetingInput!): Meeting!
+  updateMeeting(updateMeetingInput: UpdateMeetingInput!): Meeting!
+  removeMeeting(id: Int!): Meeting!
+}
+
+input CreateEmployeeInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateEmployeeInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateTaskInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateTaskInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateMeetingInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateMeetingInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
