@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { MeetingService } from './meeting.service';
-import { Meeting } from './meeting.entity';
+import { Meeting } from './entities/meeting.entity';
 import { CreateMeetingInput } from './dto/create-meeting.input';
 import { UpdateMeetingInput } from './dto/update-meeting.input';
 

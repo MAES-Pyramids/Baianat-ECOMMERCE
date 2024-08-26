@@ -1,20 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateTaskInput } from './dto/create-task.input';
-import { UpdateTaskInput } from './dto/update-task.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Task } from './task.entity';
+import { Task } from './entities/task.entity';
+import { Employee } from '../employee/entities/employee.entity';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
+
+    @InjectRepository(Employee)
+    private employeeRepository: Repository<Employee>,
   ) {}
 
-  create(createTaskInput: CreateTaskInput) {
-    // this.taskRepository.find({ where: { employeeId: '' } });
-    return 'This action adds a new task';
+  async create(employeeId: number, TaskInput: { name: string }) {
+    const employee = await this.employeeRepository.findOne({
+      where: { id: employeeId },
+    });
+    if (!employee) new HttpException('Employee not found', 404);
+
+    const task = this.taskRepository.create({ ...TaskInput, employee });
+    return this.taskRepository.save(task);
   }
 
   findAll() {
@@ -25,11 +33,14 @@ export class TaskService {
     return `This action returns a #${id} task`;
   }
 
-  update(id: number, updateTaskInput: UpdateTaskInput) {
-    return `This action updates a #${id} task`;
-  }
-
   remove(id: number) {
     return `This action removes a #${id} task`;
+  }
+
+  async findTaskByEmployeeId(employeeId: number) {
+    return this.taskRepository.find({
+      where: { employee: { id: employeeId } },
+      relations: ['employee'],
+    });
   }
 }

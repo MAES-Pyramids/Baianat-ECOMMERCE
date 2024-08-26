@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmployeeInput } from './dto/create-employee.input';
-import { UpdateEmployeeInput } from './dto/update-employee.input';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Employee } from './employee.entity';
+import { Employee } from './entities/employee.entity';
 import { Repository } from 'typeorm';
-import { ContactInfo } from './contact_info.entity';
+import { ContactInfo } from './entities/contact_info.entity';
 
 @Injectable()
 export class EmployeeService {
@@ -16,8 +15,8 @@ export class EmployeeService {
     private contactInfoRepository: Repository<ContactInfo>,
   ) {}
 
-  create(createEmployeeInput: CreateEmployeeInput) {
-    return 'This action adds a new employee';
+  async create(createEmployeeInput: CreateEmployeeInput) {
+    return this.employeeRepository.create(createEmployeeInput);
   }
 
   findAll() {
@@ -28,11 +27,14 @@ export class EmployeeService {
     return `This action returns a #${id} employee`;
   }
 
-  update(id: number, updateEmployeeInput: UpdateEmployeeInput) {
-    return `This action updates a #${id} employee`;
-  }
-
   remove(id: number) {
     return `This action removes a #${id} employee`;
+  }
+
+  async findEmployeeByTaskId(taskId: number) {
+    return this.employeeRepository.find({
+      where: { tasks: { id: taskId } },
+      relations: ['tasks'],
+    });
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateMeetingInput } from './dto/create-meeting.input';
 import { UpdateMeetingInput } from './dto/update-meeting.input';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Meeting } from './meeting.entity';
+import { Meeting } from './entities/meeting.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

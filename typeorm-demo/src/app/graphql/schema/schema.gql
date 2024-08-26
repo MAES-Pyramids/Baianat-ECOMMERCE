@@ -39,21 +39,20 @@ type Employee {
   manager: Employee
   subordinates: [Employee!]!
   meetings: [Meeting!]!
-  isActive: Boolean!
 }
 
 type Query {
+  findEmployeeByTaskId(taskId: Int!): [Employee!]!
   employee(id: Int!): Employee!
+  findTaskByEmployeeId(employeeId: Int!): [Task!]!
   task(id: Int!): Task!
   meeting(id: Int!): Meeting!
 }
 
 type Mutation {
   createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
-  updateEmployee(updateEmployeeInput: UpdateEmployeeInput!): Employee!
   removeEmployee(id: Int!): Employee!
   createTask(createTaskInput: CreateTaskInput!): Task!
-  updateTask(updateTaskInput: UpdateTaskInput!): Task!
   removeTask(id: Int!): Task!
   createMeeting(createMeetingInput: CreateMeetingInput!): Meeting!
   updateMeeting(updateMeetingInput: UpdateMeetingInput!): Meeting!
@@ -61,25 +60,14 @@ type Mutation {
 }
 
 input CreateEmployeeInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateEmployeeInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String!
+  age: Int!
+  address: String!
 }
 
 input CreateTaskInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateTaskInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String!
+  employeeId: Int!
 }
 
 input CreateMeetingInput {
