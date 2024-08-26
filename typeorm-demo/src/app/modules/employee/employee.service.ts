@@ -32,6 +32,13 @@ export class EmployeeService {
     return `This action removes a #${id} employee`;
   }
 
+  // async findEmployeeByTaskId(taskId: number) {
+  //   return this.employeeRepository.find({
+  //     where: { tasks: { id: taskId } },
+  //     relations: ['tasks'],
+  //   });
+  // }
+
   async findEmployeeByTaskId(taskId: number) {
     return this.employeeRepository.find({
       where: { tasks: { id: taskId } },

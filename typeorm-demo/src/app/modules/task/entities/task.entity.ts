@@ -1,5 +1,11 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Employee } from '@modules/employee/entities/employee.entity';
 
 @ObjectType()
@@ -13,9 +19,13 @@ export class Task {
   @Field()
   name: string;
 
+  @Column()
+  employeeId: number;
+
   @ManyToOne(() => Employee, (employee) => employee.tasks, {
     onDelete: 'SET NULL',
   })
+  @JoinColumn({ name: 'employeeId' })
   @Field(() => Employee, { nullable: true })
   employee: Employee;
 }

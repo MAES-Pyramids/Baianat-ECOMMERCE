@@ -36,9 +36,16 @@ export class TaskService {
     return `This action removes a #${id} task`;
   }
 
+  // async findTaskByEmployeeId(employeeId: number) {
+  //   return this.taskRepository.find({
+  //     where: { employee: { id: employeeId } },
+  //     relations: ['employee'],
+  //   });
+  // }
+
   async findTaskByEmployeeId(employeeId: number) {
     return this.taskRepository.find({
-      where: { employee: { id: employeeId } },
+      where: { employeeId },
       relations: ['employee'],
     });
   }
