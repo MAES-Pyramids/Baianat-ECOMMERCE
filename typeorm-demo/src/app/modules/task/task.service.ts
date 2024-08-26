@@ -1,5 +1,4 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { CreateTaskInput } from './dto/create-task.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task } from './entities/task.entity';
@@ -19,7 +18,7 @@ export class TaskService {
     const employee = await this.employeeRepository.findOne({
       where: { id: employeeId },
     });
-    if (!employee) new HttpException('Employee not found', 404);
+    if (!employee) return new HttpException('Employee not found', 404);
 
     const task = this.taskRepository.create({ ...TaskInput, employee });
     return this.taskRepository.save(task);

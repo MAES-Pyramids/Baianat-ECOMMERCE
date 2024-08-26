@@ -16,7 +16,8 @@ export class EmployeeService {
   ) {}
 
   async create(createEmployeeInput: CreateEmployeeInput) {
-    return this.employeeRepository.create(createEmployeeInput);
+    const employee = await this.employeeRepository.create(createEmployeeInput);
+    return this.employeeRepository.save(employee);
   }
 
   findAll() {
