@@ -1,4 +1,5 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Employee } from './employee.entity';
 
 export class Meeting {
   @PrimaryGeneratedColumn()
@@ -15,4 +16,7 @@ export class Meeting {
 
   @Column()
   zoomUrl: string;
+
+  @ManyToMany(() => Employee, (employee) => employee.meetings)
+  attendees: Employee[];
 }

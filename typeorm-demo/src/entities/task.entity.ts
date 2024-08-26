@@ -1,9 +1,15 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Employee } from './employee.entity';
 
-export class task {
+export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
+
+  @ManyToOne(() => Employee, (employee) => employee.tasks, {
+    onDelete: 'SET NULL',
+  })
+  employee: Employee;
 }

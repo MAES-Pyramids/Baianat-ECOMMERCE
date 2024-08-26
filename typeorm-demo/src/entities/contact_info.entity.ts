@@ -1,4 +1,5 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Employee } from './employee.entity';
 
 export class ContactInfo {
   @PrimaryGeneratedColumn()
@@ -9,4 +10,9 @@ export class ContactInfo {
 
   @Column()
   phone: string;
+
+  @OneToOne(() => Employee, (employee) => employee.contactInfo, {
+    onDelete: 'CASCADE',
+  })
+  employee: Employee;
 }
